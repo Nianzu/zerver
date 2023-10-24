@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #230404 40%, #7c1010 48%, #7c1010 52%,#230404 90%);
+    background-size: 100% 100%;
+    /* animation: gradientAnimation 10s ease infinite; */
+  }
+  
+  @keyframes gradientAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .title {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    font-size: 4vw;
+    color: #fff;
+    font-family: Georgia, serif;
+  }
+  
+  .subtitle {
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    font-size: 1.5vw;
+    color: #fff;
+    transform: translate(20%, 400%);
+    font-family: "Gill Sans", sans-serif;;
+    font-style: italic;
+  }
+  a:link { text-decoration: none; }
+  a:visited { text-decoration: none; }
+  a:hover { text-decoration: none; }
+  a:active { text-decoration: none; }
+  .credit {
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+    font-size: 0.9vw;
+    color: #7c1010;
+    font-family: sans-serif;
+    font-weight: bold;
+  }
+  
+  .navigation {
+    position: absolute;
+    top: 60%;
+    right: 20%;
+  }
+  
+  
+  .navigation{
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5vw;
+    font-family: Georgia, serif;
+  }
+  
+  .navigation ul li a:hover {
+    color: #ffa500;
+  }
+  
+  .roomba {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5vw;
+    height: 5vw;
+    background-image: url('roomba.png');
+    background-size: cover;
+  }
+  
