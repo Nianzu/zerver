@@ -64,6 +64,12 @@
     font-family: 'Pathway Extreme', sans-serif;
     font-weight:500;
   }
+  section h3 {
+    font-size: 20px;
+    margin-top: 15px;
+    font-family: 'Pathway Extreme', sans-serif;
+    font-weight:500;
+  }
   
   footer {
     background-color: #7c1010;
@@ -77,3 +83,14 @@
   footer p {
     font-size: 14px;
   }
+
+  a {
+    color:#AF1010; 
+    text-decoration: none;
+    font-weight:900;
+  }
+
+  img {
+    margin: 3px;
+    border: 7px solid #7c1010;
+ }
