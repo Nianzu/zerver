@@ -56,7 +56,11 @@ fn handle_connection(mut stream: TcpStream) {
 
     let s = match str::from_utf8(&buffer) {
         Ok(v) => v,
-        Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        Err(_) => { 
+            let response = b"HTTP/1.1 400 Bad Request\r\n\r\nInvalid UTF-8 sequence";
+            stream.write_all(response).unwrap();
+            return;
+        }
     };
     println!("{:#?}",s);
 
