@@ -8,14 +8,20 @@ A server to host my website, web projects, and teach me about rust!
 
 ## Desired Features
 - [ ] Environment loader
-- [ ] Server-side includes
-- [ ] Security
+- [x] Server-side includes
 - [ ] HTTPS
-- [ ] Remote shell
 
 ## Technologies
 
-## Hardware
+### Server-side includes
+This webserver inplements serverside includes. This allows you to define something like a sidebar in one place, and then have that be populated on the webpage as its being served to the client.
+
+```
+<!-- #include sidebar.html -->
+```
+This is done using include statements as above to load specified files.
+
+And of course, there are error checks and saftey mesures in place to make sure this can't be abused.
 
 ## Getting Started
 TODO write this section
