@@ -23,6 +23,23 @@ TODO write this section
 ### Compile
 
 ## To-Do
+- [x] Landing page
+- [x] Home page
+- [x] About
+	- [ ] Don't like that it feels like a resume section
+	- [ ] Don't like how the link looks
+- [x] Navie
+	- [ ] Missing images
+	- [ ] Missing lots of gifs
+	- [ ] Missing discussions about decisions
+- [ ] Translation Website
+- [ ] Ocean sheild
+- [ ] Zerver
+- [ ] SimAn
+- [ ] SCOT
+- [ ] BLDC Shit
+- [x] Resume
+- [ ] Projects
 
 ## Contributions
 
