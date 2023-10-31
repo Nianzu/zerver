@@ -32,11 +32,12 @@ TODO write this section
 - [x] Landing page
 - [x] Home page
 - [x] About
-	- [ ] Don't like that it feels like a resume section
-	- [ ] Don't like how the link looks
+	- [x] Don't like that it feels like a resume section
+	- [x] Don't like how the link looks
+    - [ ] Missing some content
 - [x] Navie
-	- [ ] Missing images
-	- [ ] Missing lots of gifs
+	- [x] Missing images
+	- [x] Missing lots of gifs
 	- [ ] Missing discussions about decisions
 - [ ] Translation Website
 - [ ] Ocean sheild

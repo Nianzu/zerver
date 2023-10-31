@@ -31,7 +31,7 @@ fn is_file_valid(file_path: &Path)-> bool
 
     let absolute_path = match file_path.canonicalize() {
         Ok(path) => path,
-        Err(_) => {println!("Fail is path");return false}
+        Err(_) => {return false}
     };
 
     if !absolute_path.starts_with(&current_dir) {
@@ -83,6 +83,8 @@ fn handle_connection(mut stream: TcpStream) {
     let content_type = match file_ext{
         "html" => "text/html",
         "png" => "image/png",
+        "jpg" => "image/jpeg",
+        "gif" => "image/gif",
         "js" => "text/javascript",
         "css" => "text/css",
         _ => "text/html"
