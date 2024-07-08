@@ -45,12 +45,20 @@ TODO write this section
 	- [x] Missing lots of gifs
 	- [ ] Missing discussions about decisions
 - [ ] Translation Website
+	- [ ] Missing lots of gifs
+	- [ ] Update paragraphs
 - [ ] Ocean sheild
 - [ ] Zerver
 - [ ] SimAn
 - [ ] SCOT
 - [ ] BLDC Shit
+- [ ] 3D Printing stuff
+	- [ ] Showcase
+	- [ ] Link to thangs 
+- [ ] Mechanical design
+	- [ ] Hummingbird feeder
 - [x] Resume
+	- [ ] update
 - [ ] Projects
 
 ## Contributions
