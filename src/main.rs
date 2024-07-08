@@ -49,75 +49,81 @@ fn is_file_valid(file_path: &Path)-> bool
 
 fn handle_connection(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
-    stream.read(&mut buffer).unwrap();
-
-    let s = match str::from_utf8(&buffer) {
-        Ok(v) => v,
-        Err(_) => { 
-            let response = b"HTTP/1.1 400 Bad Request\r\n\r\nInvalid UTF-8 sequence";
-            stream.write_all(response).unwrap();
+    match stream.read(&mut buffer) {
+        Ok(_) => {
+            let s = match str::from_utf8(&buffer) {
+                Ok(v) => v,
+                Err(_) => { 
+                    let response = b"HTTP/1.1 400 Bad Request\r\n\r\nInvalid UTF-8 sequence";
+                    stream.write_all(response).unwrap();
+                    return;
+                }
+            };
+        
+            let filename = {
+                let vec: Vec<&str> = s.split(' ').collect();
+                if vec.len() < 2{
+                    "/home/zico/zerver/website/".to_owned()
+                } else
+                {
+                    "/home/zico/zerver/website/".to_owned() + &vec[1][1..]
+                }
+            };
+            
+            let file_ext = {
+                let vec: Vec<&str> = filename.split('.').collect();
+                if vec.len() >= 2{
+                    &vec[1][..]
+                } else 
+                {
+                    ""
+                }
+            };
+        
+            let content_type = match file_ext{
+                "html" => "text/html",
+                "png" => "image/png",
+                "jpg" => "image/jpeg",
+                "gif" => "image/gif",
+                "js" => "text/javascript",
+                "css" => "text/css",
+                _ => "text/html"
+            };
+        
+            let (status_line, file_content) = if filename == "/home/zico/zerver/website/" {
+                ("HTTP/1.1 200 OK", read_file("/home/zico/zerver/website/hello.html"))
+            } else if is_file_valid(Path::new(&filename)){
+                if content_type == "text/html" || content_type == "text/css" || content_type == "text/javascript"
+                {
+                    ("HTTP/1.1 200 OK", read_file_ssi(&filename))
+                }
+                else
+                {
+                    ("HTTP/1.1 200 OK", read_file(&filename))
+                }
+            } else {
+                ("HTTP/1.1 404 Not Found", read_file("/home/zico/zerver/website/404.html"))
+            };
+        
+        
+        
+            let response = format!(
+                "{}\r\nContent-Type: {}\r\nContent-Length: {}\r\n\r\n",
+                status_line,
+                content_type,
+                file_content.len()
+            );
+            let mut response = response.into_bytes();
+            response.extend(file_content);
+        
+            stream.write_all(&response).unwrap();
+            stream.flush().unwrap();
+        },
+        Err(e) => { 
+            eprintln!("Error reading stream: {}",e);
             return;
         }
     };
-
-    let filename = {
-        let vec: Vec<&str> = s.split(' ').collect();
-        if vec.len() < 2{
-            "/home/zico/zerver/website/".to_owned()
-        } else
-        {
-            "/home/zico/zerver/website/".to_owned() + &vec[1][1..]
-        }
-    };
-    
-    let file_ext = {
-        let vec: Vec<&str> = filename.split('.').collect();
-        if vec.len() >= 2{
-            &vec[1][..]
-        } else 
-        {
-            ""
-        }
-    };
-
-    let content_type = match file_ext{
-        "html" => "text/html",
-        "png" => "image/png",
-        "jpg" => "image/jpeg",
-        "gif" => "image/gif",
-        "js" => "text/javascript",
-        "css" => "text/css",
-        _ => "text/html"
-    };
-
-    let (status_line, file_content) = if filename == "/home/zico/zerver/website/" {
-        ("HTTP/1.1 200 OK", read_file("/home/zico/zerver/website/hello.html"))
-    } else if is_file_valid(Path::new(&filename)){
-        if content_type == "text/html" || content_type == "text/css" || content_type == "text/javascript"
-        {
-            ("HTTP/1.1 200 OK", read_file_ssi(&filename))
-        }
-        else
-        {
-            ("HTTP/1.1 200 OK", read_file(&filename))
-        }
-    } else {
-        ("HTTP/1.1 404 Not Found", read_file("/home/zico/zerver/website/404.html"))
-    };
-
-
-
-    let response = format!(
-        "{}\r\nContent-Type: {}\r\nContent-Length: {}\r\n\r\n",
-        status_line,
-        content_type,
-        file_content.len()
-    );
-    let mut response = response.into_bytes();
-    response.extend(file_content);
-
-    stream.write_all(&response).unwrap();
-    stream.flush().unwrap();
 }
 
 // Find a subsequence in a sequence of u8's (Just String::find but for Vec<u8>)
