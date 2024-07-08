@@ -25,6 +25,11 @@ And of course, there are error checks and saftey mesures in place to make sure t
 
 ## Getting Started
 TODO write this section
+- Add the dns updater as a cron job `crontab -e`:
+```
+*/1 * * * *    ~/zerver/update_dns.bash > /dev/null
+
+```
 
 ### Compile
 
