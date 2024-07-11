@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSCAR</title>
+  <link rel="stylesheet" href="homestyles.css">
+</head>
+<body>
+<!-- #include sidebar.html -->
+
+  <div class="content">
+    <header>
+      <h1>Hackathon Project - O.S.C.A.R.</h1>
+      <p>Ocean Sustainability Corporation Accountability Record (OSCAR) is a series of tools to hold international organizations to account for their deep-sea trash using open source data.</p>
+      <p>Collaborators: Henry Ko, Haniyya Surayya, Isa Cardenas</p>
+      <p>🏆 1st Prize - Hack MIT IBM Sustainability Challenge</p>
+    </header>
+
+    <section>
+      <h2>About the project</h2>
+      <p>Developed over the course of 24 hrs at Hack MIT 2022, OSCAR allows anyone to use open source ship transponder information and open source deep sea AUV (Autonomous Underwater Vehicle) videos to analyze pollution on the seafloor and build a case against repeat polluters.</p>
+      <p>OSCAR includes a selection of tools to facilitate ship tracking, AI pollution detection specifically tuned for the deep sea environments, and a central hub to help tie the data together. We retrained a YOLOv5 model to identify human waste, as well as filter out fish and other normal undersea features. </p>
+      <p>To facilitate ship tracking, including viewing ship movement histories, we use the API presented by marinetraffic.com, which allows us to view all the ships that have traveled over a given location within a certain time window.</p>
+    </section>
+
+    <section>
+      <h2>Workflow</h2>
+      <p>First, the user uploads AUV videos to allow OSCAR to process them for signs of human waste.</p>
+      <img src="oscar_1.png" alt="Image of OSCAR" height="500">
+      <p>If human waste is detected, it will pop up on the dashboard. The user can then estimate how long the waste has been on the seafloor and give OSCAR a time window to search for ship traffic.</p>
+      <img src="oscar_2.png" alt="Image of OSCAR" height="500">
+      <p>Oscar will then present the user with ships whose routes passed through a radius around the waist withing the time window the operator believes the trash would have been dumped. With enough such associations, as well as any identifying markings on the waste, the operator can build a case against certain ships or shipping organizations, bringing pollution accountability to the depths of the sea.</p>
+      <img src="oscar_3.png" alt="Image of OSCAR" height="500">
+    </section>
+
+
+    <section>
+      <h2>Technologies</h2>
+      <p>Python</p>
+      <p>Image Classification (YOLO)</p>
+      <p>UI Development</p>
+    </section>
+    
+    <section>
+      <h2>Relevant Links</h2>
+      <p><a href="https://github.com/Nianzu/OceanShield" target="_blank">Github</a></p>
+    </section>
+
+    <footer>
+      <p>&copy; 2023 Nico Zucca. No rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>

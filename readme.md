@@ -47,14 +47,14 @@ TODO write this section
 - [ ] Translation Website
 	- [ ] Missing lots of gifs
 	- [ ] Update paragraphs
-- [ ] Ocean sheild
+- [x] Ocean sheild
 - [ ] Zerver
 - [ ] SimAn
 - [ ] SCOT
 - [ ] BLDC Shit
-- [ ] 3D Printing stuff
-	- [ ] Showcase
-	- [ ] Link to thangs 
+- [x] 3D Printing stuff
+	- [x] Showcase
+	- [x] Link to thangs 
 - [ ] Mechanical design
 	- [ ] Hummingbird feeder
 - [x] Resume
