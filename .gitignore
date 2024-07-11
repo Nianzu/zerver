@@ -1,6 +1,8 @@
 debug/
 target/
 
+key.txt
+
 **/*.rs.bk
 *.pdb
 *.swp

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-api_token="***REMOVED***"
+api_token=$(cat key.txt)
 email="nazucca7@gmail.com"
 zone_name="nicozucca.com"
 dns_record="nicozucca.com"
