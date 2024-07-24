@@ -11,7 +11,12 @@ fn main() {
     let pool = ThreadPool::new(4);
 
     for stream in listener.incoming() {
-        let stream = stream.unwrap();
+        // https://github.com/hyperium/hyper/issues/1358
+        // Ignore errors and just handle next request
+        let stream = match stream {
+            Ok(stream) => stream,
+            Err(_) => continue,
+        };
 
         pool.execute(|| {
             handle_connection(stream);
