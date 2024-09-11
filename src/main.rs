@@ -67,7 +67,7 @@ fn handle_connection(mut stream: TcpStream) {
         
             let filename = {
                 let vec: Vec<&str> = s.split(' ').collect();
-                if vec.len() < 2{
+                if vec.len() < 2 || vec[1].len() < 2{
                     "/home/zico/zerver/website/".to_owned()
                 } else
                 {
