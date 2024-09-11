@@ -100,7 +100,7 @@ fn handle_connection(mut stream: TcpStream) {
             } else if is_file_valid(Path::new(&filename)){
                 if content_type == "text/html" || content_type == "text/css" || content_type == "text/javascript"
                 {
-                    ("HTTP/1.1 200 OK", read_file_ssi(&filename))
+                    ("HTTP/1.1 200 OK", read_file_ssi(&filename, Vec::new()))
                 }
                 else
                 {
@@ -140,13 +140,21 @@ fn find_subsequence(haystack: &[u8], needle: &[u8]) -> Option<usize> {
 }
 
 // Read a file, but process it for server-side includes
-fn read_file_ssi(filename: &str) -> Vec<u8> {
+fn read_file_ssi(filename: &str, param: Vec<&str>) -> Vec<u8> {
     // Define the tokens that we are searching for
     let include_token = b"<!-- #include ";
     let end_token = b" -->";
-    
+ 
     // Read the file in
     let mut file_string =fs::read(filename).unwrap();
+
+    // First, search and replace the arg tags
+    for (i, el) in param.iter().enumerate()
+    {
+        println!("Replaceing any ${i} with {el}");
+        let temp_file_string = str::from_utf8(&file_string).unwrap().replace(&("$".to_owned()+&i.to_string()),el);
+        file_string = temp_file_string.as_bytes().to_vec();
+    }
 
     // Try to find an include token
     let mut find_include = find_subsequence(&file_string,include_token);
@@ -172,13 +180,19 @@ fn read_file_ssi(filename: &str) -> Vec<u8> {
         file_string.extend(&temp_file_string[..find_include.unwrap()]);
         
         // Pull the text from between the tokens and populate it into the ssi_filename we are looking for
-        let incuded_str = &temp_file_string[find_include.unwrap() + include_token.len()..find_include.unwrap()+find_end.unwrap()];
-        let ssi_filename ="/home/zico/zerver/website/".to_owned() + &String::from_utf8(incuded_str.to_vec()).unwrap();
+        let included_str = &String::from_utf8(temp_file_string[find_include.unwrap() + include_token.len()..find_include.unwrap()+find_end.unwrap()].to_vec()).unwrap();
+        println!("SSI: \"{}\"",included_str);
+        let included_parts = included_str.split(" ").collect::<Vec<&str>>();
+        let mut ssi_filename ="/home/zico/zerver/website/".to_owned(); 
+        if included_parts.len() > 0
+        {
+        ssi_filename +=included_parts[0];
+        }
 
         // Check if the ssi_filename is valid, and copy the content onto the file_string, or copy an error message in its place.
         if is_file_valid(Path::new(&ssi_filename))
         {
-            file_string.extend(read_file_ssi(&ssi_filename));
+            file_string.extend(read_file_ssi(&ssi_filename, included_parts));
         }
         else
         {
