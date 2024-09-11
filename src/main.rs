@@ -121,8 +121,10 @@ fn handle_connection(mut stream: TcpStream) {
             let mut response = response.into_bytes();
             response.extend(file_content);
         
-            stream.write_all(&response).unwrap();
-            stream.flush().unwrap();
+            match stream.write_all(&response) {
+                Ok(_) => stream.flush().unwrap(),
+                Err(_) => eprintln!("Other end hung up"),
+            };
         },
         Err(e) => { 
             eprintln!("Error reading stream: {}",e);
