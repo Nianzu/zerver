@@ -1,8 +1,0 @@
-Keys generated with following:
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes
-openssl rsa -in key.pem -out key_rsa.pem
-
-Newest keys generated via 
-https://certbot.eff.org/instructions?ws=other&os=snap
-sudo certbot certonly --standalone --key-type rsa
-sudo openssl rsa -in /etc/letsencrypt/live/nicozucca.com/privkey.pem -out /etc/letsencrypt/live/nicozucca.com/privkey_rsa.pem
