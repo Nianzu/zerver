@@ -18,8 +18,8 @@ use std::fs;
 
 
 fn load_tls_config() -> Arc<ServerConfig> {
-    let cert_file = &mut BufReader::new(File::open("/home/zico/zerver/cert.pem").unwrap());
-    let key_file = &mut BufReader::new(File::open("/home/zico/zerver/key_rsa.pem").unwrap());
+    let cert_file = &mut BufReader::new(File::open("/etc/letsencrypt/live/nicozucca.com/fullchain.pem").unwrap());
+    let key_file = &mut BufReader::new(File::open("/etc/letsencrypt/live/nicozucca.com/privkey_rsa.pem").unwrap());
 
     let cert_chain = certs(cert_file).unwrap(); // Vec<Certificate>
     let mut keys = rsa_private_keys(key_file).unwrap();
