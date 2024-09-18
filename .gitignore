@@ -2,7 +2,9 @@ debug/
 target/
 
 key.txt
-
+key.pem
+key_rsa.pem
+cert.pem
 **/*.rs.bk
 *.pdb
 *.swp
