@@ -9,7 +9,7 @@ A server to host my website, web projects, and teach me about rust!
 ## Desired Features
 - [ ] Environment loader
 - [x] Server-side includes
-- [ ] HTTPS
+- [x] HTTPS
 
 ## Technologies
 
@@ -21,6 +21,16 @@ This webserver inplements serverside includes. This allows you to define somethi
 ```
 This is done using include statements as above to load specified files.
 
+We also have the ability to provide arguments to the SSI, such as below. Here, the image name `processed6.png` is substituded in place of all `$1` tags in the SSI target file. This allows a widget-like structure for HTML/CSS/JS development.
+```
+<!-- #include image.html processed6.png -->
+```
+
+```
+<a href="#$1"><img src="$1" alt="" height="300" width="300"></a>
+<a href="#!" class="lightbox" id="$1"><img src="$1" alt=""></a>
+```
+
 And of course, there are error checks and saftey mesures in place to make sure this can't be abused.
 
 ## Getting Started
@@ -29,6 +39,19 @@ TODO write this section
 ```
 */1 * * * *    ~/zerver/update_dns.bash > /dev/null
 
+```
+
+- Generate keys using certbot:
+```
+https://certbot.eff.org/instructions?ws=other&os=snap
+sudo certbot certonly --standalone --key-type rsa
+sudo openssl rsa -in /etc/letsencrypt/live/nicozucca.com/privkey.pem -out /etc/letsencrypt/live/nicozucca.com/privkey_rsa.pem
+```
+
+- Or generate dev keys using openssl:
+```
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes
+openssl rsa -in key.pem -out key_rsa.pem
 ```
 
 ### Compile
@@ -44,9 +67,9 @@ TODO write this section
 	- [x] Missing images
 	- [x] Missing lots of gifs
 	- [ ] Missing discussions about decisions
-- [ ] Translation Website
-	- [ ] Missing lots of gifs
-	- [ ] Update paragraphs
+- [x] Translation Website
+	- [x] Missing lots of gifs
+	- [x] Update paragraphs
 - [x] Ocean sheild
 - [ ] Zerver
 - [ ] SimAn
@@ -55,10 +78,10 @@ TODO write this section
 - [x] 3D Printing stuff
 	- [x] Showcase
 	- [x] Link to thangs 
-- [ ] Mechanical design
-	- [ ] Hummingbird feeder
+- [x] Mechanical design
+	- [x] Hummingbird feeder
 - [x] Resume
-	- [ ] update
+	- [x] update
 - [ ] Projects
 
 ## Contributions
