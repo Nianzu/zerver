@@ -1,69 +1,118 @@
-use zerver::ThreadPool;
-use std::io::prelude::*;
-use std::net::TcpListener;
-use std::net::TcpStream;
+use std::fs::File;
+use std::io::BufReader;
+use std::net::SocketAddr;
+use std::path::Path;
 use std::str;
-use std::path::{Path};
+
+use tokio::net::TcpListener;
+use tokio::net::TcpStream;
+use tokio_rustls::rustls::{Certificate, PrivateKey, ServerConfig};
+use tokio_rustls::TlsAcceptor;
+use tokio_rustls::rustls::internal::pemfile::{certs, rsa_private_keys};
+use std::sync::Arc;
+use tokio::io::AsyncReadExt;
+use tokio::io::AsyncWriteExt;
 use std::fs;
 
-fn main() {
-    let listener = TcpListener::bind("0.0.0.0:80").unwrap();
-    let pool = ThreadPool::new(4);
 
-    for stream in listener.incoming() {
-        // https://github.com/hyperium/hyper/issues/1358
-        // Ignore errors and just handle next request
-        let stream = match stream {
-            Ok(stream) => stream,
-            Err(_) => continue,
-        };
 
-        pool.execute(|| {
-            handle_connection(stream);
+
+fn load_tls_config() -> Arc<ServerConfig> {
+    let cert_file = &mut BufReader::new(File::open("/home/zico/zerver/cert.pem").unwrap());
+    let key_file = &mut BufReader::new(File::open("/home/zico/zerver/key_rsa.pem").unwrap());
+
+    let cert_chain = certs(cert_file).unwrap(); // Vec<Certificate>
+    let mut keys = rsa_private_keys(key_file).unwrap();
+
+    
+
+    println!("Keys found: {}", keys.len());
+    if keys.is_empty() {
+        panic!("No private key found in key.pem");
+    }
+    // Create a new ServerConfig with default settings
+    let mut config = ServerConfig::new(tokio_rustls::rustls::NoClientAuth::new());
+
+    // Set the certificates and private key
+    config.set_single_cert(cert_chain, keys.remove(0)).expect("invalid key or certificate");
+
+    Arc::new(config)
+}
+
+#[tokio::main]
+async fn main() {
+    let tls_config = load_tls_config();
+    let tls_acceptor = TlsAcceptor::from(tls_config);
+
+    let addr: SocketAddr = "0.0.0.0:443".parse().unwrap();
+    let listener = TcpListener::bind(addr).await.unwrap();
+
+    loop {
+        let (stream, _) = listener.accept().await.unwrap();
+        let tls_acceptor = tls_acceptor.clone();
+
+        tokio::spawn(async move {
+            let tls_stream = match tls_acceptor.accept(stream).await{
+                Ok(v) => v,
+                Err(_) => return};
+            handle_connection(tls_stream).await;
         });
     }
 }
 
 
+
+
 fn is_file_valid(file_path: &Path)-> bool
 {
+    println!("V");
     let mut current_dir = match std::env::current_dir() {
         Ok(dir) => dir,
         Err(_) => return false
     };
-
+    println!("Current Dir: {}",current_dir.display());
+    println!("V");
     current_dir =current_dir.join("home/zico/zerver/website");
 
+    println!("Current Dir: {}",current_dir.display());
+    println!("V");
     let absolute_path = match file_path.canonicalize() {
         Ok(path) => path,
         Err(_) => {return false}
     };
 
+    println!("Absolute Dir: {}",absolute_path.display());
+    println!("V");
     if !absolute_path.starts_with(&current_dir) {
         return false
     }
+    println!("V");
 
     if !file_path.exists() { 
         return false
     }
+    println!("V");
 
     if !file_path.is_file() {return false}
+    println!("V");
 
     true
 }
 
-fn handle_connection(mut stream: TcpStream) {
+async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream>) {
     let mut buffer = [0; 1024];
-    match stream.read(&mut buffer) {
+    match stream.read(&mut buffer).await {
         Ok(_) => {
             let s = match str::from_utf8(&buffer) {
                 Ok(v) => v,
                 Err(_) => { 
                     let response = b"HTTP/1.1 400 Bad Request\r\n\r\nInvalid UTF-8 sequence";
-                    stream.write_all(response).unwrap();
+                    stream.write_all(response).await.unwrap();
                     return;
                 }
             };
+            println!("\nNEW CONNECTION");
+            println!("{}",s);
         
             let filename = {
                 let vec: Vec<&str> = s.split(' ').collect();
@@ -74,6 +123,7 @@ fn handle_connection(mut stream: TcpStream) {
                     "/home/zico/zerver/website/".to_owned() + &vec[1][1..]
                 }
             };
+            println!("FILENAME: {}",filename);
             
             let file_ext = {
                 let vec: Vec<&str> = filename.split('.').collect();
@@ -84,6 +134,7 @@ fn handle_connection(mut stream: TcpStream) {
                     ""
                 }
             };
+            println!("FILE EXT: {}",file_ext);
         
             let content_type = match file_ext{
                 "html" => "text/html",
@@ -94,7 +145,8 @@ fn handle_connection(mut stream: TcpStream) {
                 "css" => "text/css",
                 _ => "text/html"
             };
-        
+            println!("CONTENT TYPE: {}",content_type);
+             
             let (status_line, file_content) = if filename == "/home/zico/zerver/website/" {
                 ("HTTP/1.1 200 OK", read_file("/home/zico/zerver/website/hello.html"))
             } else if is_file_valid(Path::new(&filename)){
@@ -121,10 +173,8 @@ fn handle_connection(mut stream: TcpStream) {
             let mut response = response.into_bytes();
             response.extend(file_content);
         
-            match stream.write_all(&response) {
-                Ok(_) => stream.flush().unwrap(),
-                Err(_) => eprintln!("Other end hung up"),
-            };
+            stream.write_all(&response).await;
+            stream.flush().await;
         },
         Err(e) => { 
             eprintln!("Error reading stream: {}",e);
