@@ -3,10 +3,9 @@ use std::io::BufReader;
 use std::net::SocketAddr;
 use std::path::Path;
 use std::str;
-
 use tokio::net::TcpListener;
 use tokio::net::TcpStream;
-use tokio_rustls::rustls::{Certificate, PrivateKey, ServerConfig};
+use tokio_rustls::rustls::{ServerConfig};
 use tokio_rustls::TlsAcceptor;
 use tokio_rustls::rustls::internal::pemfile::{certs, rsa_private_keys};
 use std::sync::Arc;
@@ -18,43 +17,53 @@ use std::fs;
 
 
 fn load_tls_config() -> Arc<ServerConfig> {
+    // Open the key and cert files
     let cert_file = &mut BufReader::new(File::open("/etc/letsencrypt/live/nicozucca.com/fullchain.pem").unwrap());
     let key_file = &mut BufReader::new(File::open("/etc/letsencrypt/live/nicozucca.com/privkey_rsa.pem").unwrap());
 
-    let cert_chain = certs(cert_file).unwrap(); // Vec<Certificate>
+    // Load them
+    let cert_chain = certs(cert_file).unwrap(); 
     let mut keys = rsa_private_keys(key_file).unwrap();
 
-    
-
-    println!("Keys found: {}", keys.len());
+    // Kill if error
     if keys.is_empty() {
         panic!("No private key found in key.pem");
     }
+
     // Create a new ServerConfig with default settings
     let mut config = ServerConfig::new(tokio_rustls::rustls::NoClientAuth::new());
 
     // Set the certificates and private key
     config.set_single_cert(cert_chain, keys.remove(0)).expect("invalid key or certificate");
 
+    // Use arc for threadsaftey
     Arc::new(config)
 }
 
 #[tokio::main]
 async fn main() {
+    // Generate the TLS object
     let tls_config = load_tls_config();
     let tls_acceptor = TlsAcceptor::from(tls_config);
 
+    // Setup a listener on the TLS port
     let addr: SocketAddr = "0.0.0.0:443".parse().unwrap();
     let listener = TcpListener::bind(addr).await.unwrap();
 
     loop {
+        // Wait for a new connection
         let (stream, _) = listener.accept().await.unwrap();
+
+        // Create a TLS object to handle the connection
         let tls_acceptor = tls_acceptor.clone();
 
         tokio::spawn(async move {
+            // Accept the connection in a new tokio thread
             let tls_stream = match tls_acceptor.accept(stream).await{
                 Ok(v) => v,
                 Err(_) => return};
+
+            // Process the connection
             handle_connection(tls_stream).await;
         });
     }
@@ -65,44 +74,48 @@ async fn main() {
 
 fn is_file_valid(file_path: &Path)-> bool
 {
-    println!("V");
+
+    // Generate the website directory (which all files 
+    // for general access should be under)
     let mut current_dir = match std::env::current_dir() {
         Ok(dir) => dir,
         Err(_) => return false
     };
-    println!("Current Dir: {}",current_dir.display());
-    println!("V");
     current_dir =current_dir.join("home/zico/zerver/website");
 
-    println!("Current Dir: {}",current_dir.display());
-    println!("V");
+    // Get the path to the file we are hoping to read
     let absolute_path = match file_path.canonicalize() {
         Ok(path) => path,
         Err(_) => {return false}
     };
 
-    println!("Absolute Dir: {}",absolute_path.display());
-    println!("V");
+    // If the path to that file isn't inside the 
+    // website directory, the file isn't valid.
     if !absolute_path.starts_with(&current_dir) {
         return false
     }
-    println!("V");
 
+    // If the file doesn't exist, the file isn't 
+    // valid.
     if !file_path.exists() { 
         return false
     }
-    println!("V");
 
+    // If the file isn't a file (I.E. its a 
+    // directory or something else), the file 
+    // isn't valid.
     if !file_path.is_file() {return false}
-    println!("V");
 
     true
 }
 
 async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream>) {
+    // Read the connection request into a buffer
     let mut buffer = [0; 1024];
     match stream.read(&mut buffer).await {
         Ok(_) => {
+
+            // Load that buffer into a string, return error page on bad request
             let s = match str::from_utf8(&buffer) {
                 Ok(v) => v,
                 Err(_) => { 
@@ -111,9 +124,10 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                     return;
                 }
             };
-            println!("\nNEW CONNECTION");
-            println!("{}",s);
         
+            // Get the requested file from the request string.
+            // If there doesn't seem to be a requested file, 
+            // substitute the website root.
             let filename = {
                 let vec: Vec<&str> = s.split(' ').collect();
                 if vec.len() < 2 || vec[1].len() < 2{
@@ -125,6 +139,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             };
             println!("FILENAME: {}",filename);
             
+            // Get the file extension thats been requested
             let file_ext = {
                 let vec: Vec<&str> = filename.split('.').collect();
                 if vec.len() >= 2{
@@ -136,6 +151,8 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             };
             println!("FILE EXT: {}",file_ext);
         
+            // Convert the extension to a content type. Assume text/html
+            // if file extension is unknown.
             let content_type = match file_ext{
                 "html" => "text/html",
                 "png" => "image/png",
@@ -146,10 +163,17 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                 _ => "text/html"
             };
             println!("CONTENT TYPE: {}",content_type);
-             
+            
+            // Send the requested file
             let (status_line, file_content) = if filename == "/home/zico/zerver/website/" {
+
+                // For the website root, send the hello page
                 ("HTTP/1.1 200 OK", read_file("/home/zico/zerver/website/hello.html"))
+
+            // If the file is valid, send it
             } else if is_file_valid(Path::new(&filename)){
+
+                // Process SSI (Server Side Includes) for any text content
                 if content_type == "text/html" || content_type == "text/css" || content_type == "text/javascript"
                 {
                     ("HTTP/1.1 200 OK", read_file_ssi(&filename, Vec::new()))
@@ -158,24 +182,29 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                 {
                     ("HTTP/1.1 200 OK", read_file(&filename))
                 }
+
+            // If the file requested is invalid or outside the website directory, send 404
             } else {
                 ("HTTP/1.1 404 Not Found", read_file("/home/zico/zerver/website/404.html"))
             };
         
-        
-        
+            // Generate a response header
             let response = format!(
                 "{}\r\nContent-Type: {}\r\nContent-Length: {}\r\n\r\n",
                 status_line,
                 content_type,
                 file_content.len()
             );
+
+            // Convert it to bytes and add the content body
             let mut response = response.into_bytes();
             response.extend(file_content);
         
-            stream.write_all(&response).await;
-            stream.flush().await;
+            // Write the file over the connection
+            let _  = stream.write_all(&response).await;
+            let _ = stream.flush().await;
         },
+
         Err(e) => { 
             eprintln!("Error reading stream: {}",e);
             return;
