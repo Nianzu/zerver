@@ -125,6 +125,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                 }
             };
         
+            println!("CONTENT: {}",s);
             // Get the requested file from the request string.
             // If there doesn't seem to be a requested file, 
             // substitute the website root.
