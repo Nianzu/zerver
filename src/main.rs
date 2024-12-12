@@ -138,6 +138,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
         
             println!("CONTENT: {}",s);
             println!("REQUEST TYPE: \"{}\"",request_type);
+            let mut cookie = "";
 
             if request_type == "POST" && s.contains("psw=")
             {
@@ -155,6 +156,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                 if Argon2::default().verify_password(pwd.as_bytes(), &parsed_hash).is_ok()
                 {
                     println!("TRUE");
+                    cookie = "tasty";
                 } else {
                     println!("FALSE");
                 }
@@ -222,12 +224,15 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             } else {
                 ("HTTP/1.1 404 Not Found", read_file("/home/zico/zerver/website/404.html"))
             };
+            let cookie_line = format!("Set-Cookie: {}; Secure; HttpOnly; SameSite=Strict\r\n",
+        cookie);
         
             // Generate a response header
             let response = format!(
-                "{}\r\nContent-Type: {}\r\nContent-Length: {}\r\n\r\n",
+                "{}\r\nContent-Type: {}\r\n{}Content-Length: {}\r\n\r\n",
                 status_line,
                 content_type,
+                if (cookie != "" ) {cookie_line} else {"".to_string()},
                 file_content.len()
             );
 
