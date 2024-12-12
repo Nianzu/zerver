@@ -12,7 +12,8 @@ use std::sync::Arc;
 use tokio::io::AsyncReadExt;
 use tokio::io::AsyncWriteExt;
 use std::fs;
-
+use argon2::{Argon2, PasswordHasher, PasswordHash, PasswordVerifier, password_hash::{Salt, SaltString}};
+use std::fs::read_to_string;
 
 
 
@@ -45,7 +46,7 @@ async fn main() {
     // Generate the TLS object
     let tls_config = load_tls_config();
     let tls_acceptor = TlsAcceptor::from(tls_config);
-
+ 
     // Setup a listener on the TLS port
     let addr: SocketAddr = "0.0.0.0:443".parse().unwrap();
     let listener = TcpListener::bind(addr).await.unwrap();
@@ -124,8 +125,41 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                     return;
                 }
             };
+
+            let request_type = {
+                let vec: Vec<&str> = s.split(' ').collect();
+                if vec.len() < 1 || vec[0].len() < 1{
+                    "UNKNOWN".to_owned()
+                } else {
+                    (&vec[0][0..]).to_string()
+                }
+            };
+
         
             println!("CONTENT: {}",s);
+            println!("REQUEST TYPE: \"{}\"",request_type);
+
+            if request_type == "POST" && s.contains("psw=")
+            {
+                let hash_string = &fs::read_to_string("/home/zico/zerver/secrets/pwd_hash.txt").unwrap();
+                let parsed_hash = PasswordHash::new(hash_string.trim()).unwrap();
+                let start_bytes = s.find("psw=").unwrap_or(0) + 4;
+                let mut pwd = s[start_bytes..].to_owned();
+
+                let salt_str = "YmFkIHNhbHQh";
+                let salt: Salt = salt_str.try_into().unwrap();
+
+                let argon2 = Argon2::default();
+                let hash  = argon2.hash_password(pwd.as_bytes(),salt).unwrap();
+
+                if Argon2::default().verify_password(pwd.as_bytes(), &parsed_hash).is_ok()
+                {
+                    println!("TRUE");
+                } else {
+                    println!("FALSE");
+                }
+                println!("HASH: \"{}\"",hash);
+            }
             // Get the requested file from the request string.
             // If there doesn't seem to be a requested file, 
             // substitute the website root.
