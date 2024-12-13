@@ -2,7 +2,7 @@ use std::fs;
 use std::path::Path;
 use std::str;
 
-pub fn is_file_valid(file_path: &Path) -> bool {
+pub fn is_file_valid(file_path: &Path, authenticated: bool) -> bool {
     // Generate the website directory (which all files
     // for general access should be under)
     let mut current_dir = match std::env::current_dir() {
@@ -20,6 +20,13 @@ pub fn is_file_valid(file_path: &Path) -> bool {
     // If the path to that file isn't inside the
     // website directory, the file isn't valid.
     if !absolute_path.starts_with(&current_dir) {
+        return false;
+    }
+
+    // If the path is inside the secure zone, but we aren't authenticated, the
+    // file isn't valid
+    let secured_dir = current_dir.join("secured");
+    if absolute_path.starts_with(&secured_dir) && !authenticated {
         return false;
     }
 
@@ -48,7 +55,7 @@ fn find_subsequence(haystack: &[u8], needle: &[u8]) -> Option<usize> {
 }
 
 // Read a file, but process it for server-side includes
-pub fn read_file_ssi(filename: &str, param: Vec<&str>) -> Vec<u8> {
+pub fn read_file_ssi(filename: &str, param: Vec<&str>, authenticated: bool) -> Vec<u8> {
     // Define the tokens that we are searching for
     let include_token = b"<!-- #include ";
     let end_token = b" -->";
@@ -101,8 +108,8 @@ pub fn read_file_ssi(filename: &str, param: Vec<&str>) -> Vec<u8> {
         }
 
         // Check if the ssi_filename is valid, and copy the content onto the file_string, or copy an error message in its place.
-        if is_file_valid(Path::new(&ssi_filename)) {
-            file_string.extend(read_file_ssi(&ssi_filename, included_parts));
+        if is_file_valid(Path::new(&ssi_filename), authenticated) {
+            file_string.extend(read_file_ssi(&ssi_filename, included_parts, authenticated));
         } else {
             file_string.extend(b"Error: Unable to find ssi.");
         }

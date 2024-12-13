@@ -86,7 +86,8 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
     let mut buffer = [0; 1024];
     match stream.read(&mut buffer).await {
         Ok(_) => {
-            let mut cookie = "";
+            let mut cookie_to_send = "";
+            let mut authenticated: bool = false;
 
             // Load that buffer into a string, return error page on bad request
             let s = match str::from_utf8(&buffer) {
@@ -109,12 +110,26 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                     Some(pwd) => {
                         if authentication::verify_password(pwd) {
                             println!("TRUE");
-                            cookie = "sID=tasty";
+                            cookie_to_send = "sID=tasty";
                         } else {
                             println!("FALSE");
                         }
                     }
                     None => println!("NO PWD"),
+                }
+            }
+
+            match http_request.cookie {
+                Some(cookie) => {
+                    if cookie == "tasty" {
+                        authenticated = true;
+                        println!("GOOD COOKIE");
+                    } else {
+                        println!("BAD COOKIE \"{}\"", cookie);
+                    }
+                }
+                None => {
+                    println!("NO COOKIE")
                 }
             }
 
@@ -134,7 +149,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                     )
 
                 // If the file is valid, send it
-                } else if file_handler::is_file_valid(Path::new(&http_request.filename)) {
+                } else if file_handler::is_file_valid(Path::new(&http_request.filename),authenticated) {
                     // Process SSI (Server Side Includes) for any text content
                     if http_request.content_type == "text/html"
                         || http_request.content_type == "text/css"
@@ -142,7 +157,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                     {
                         (
                             "HTTP/1.1 200 OK",
-                            file_handler::read_file_ssi(&http_request.filename, Vec::new()),
+                            file_handler::read_file_ssi(&http_request.filename, Vec::new(),authenticated),
                         )
                     } else {
                         ("HTTP/1.1 200 OK", file_handler::read_file(&http_request.filename))
@@ -159,7 +174,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             // Generate the cookie line
             let cookie_line = format!(
                 "Set-Cookie: {}; Secure; HttpOnly; SameSite=Strict\r\n",
-                cookie
+                cookie_to_send
             );
 
             // Generate a response header
@@ -167,7 +182,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                 "{}\r\nContent-Type: {}\r\n{}Content-Length: {}\r\n\r\n",
                 status_line,
                 http_request.content_type,
-                if cookie != "" {
+                if cookie_to_send != "" {
                     cookie_line
                 } else {
                     "".to_string()

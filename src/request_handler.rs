@@ -1,9 +1,12 @@
+use std::collections::HashMap;
+
 pub struct HttpRequest {
     pub request_type: String,
     pub filename: String,
     pub file_ext: String,
     pub pwd: Option<String>,
     pub content_type: String,
+    pub cookie: Option<String>,
 }
 
 pub fn http_request_from_string(s: &str) -> HttpRequest {
@@ -45,6 +48,7 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
         "css" => "text/css",
         _ => "text/html",
     };
+    let local_cookie = get_cookie(s);
 
     HttpRequest {
         request_type: request_type_local,
@@ -52,6 +56,7 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
         file_ext: file_ext_local,
         pwd: pwd_local,
         content_type: content_type_local.to_string(),
+        cookie: local_cookie,
     }
 }
 
@@ -61,6 +66,21 @@ fn get_pwd(s: &str) -> Option<String> {
             s.split("psw=").collect::<Vec<_>>()[1]
                 .lines()
                 .collect::<Vec<_>>()[0]
+                .to_string(),
+        )
+    } else {
+        None
+    }
+}
+
+fn get_cookie(s: &str) -> Option<String> {
+    if s.contains("Cookie: ") {
+        Some(
+            s.split("Cookie: ").collect::<Vec<_>>()[1]
+                .lines()
+                .collect::<Vec<_>>()[0]
+                .split("=")
+                .collect::<Vec<_>>()[1]
                 .to_string(),
         )
     } else {
