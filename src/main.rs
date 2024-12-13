@@ -130,10 +130,10 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                     return;
                 }
             };
+            println!("CONTENT: {}", s);
 
             let http_request = handler::http_request_from_string(s);
 
-            println!("CONTENT: {}", s);
             println!("REQUEST TYPE: \"{}\"", http_request.request_type);
             let mut cookie = "";
 
@@ -161,33 +161,14 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                 }
                 println!("HASH: \"{}\"", hash);
             }
-            // Get the requested file from the request string.
-            // If there doesn't seem to be a requested file,
-            // substitute the website root.
-            let filename = {
-                let vec: Vec<&str> = s.split(' ').collect();
-                if vec.len() < 2 || vec[1].len() < 2 {
-                    "/home/zico/zerver/website/".to_owned()
-                } else {
-                    "/home/zico/zerver/website/".to_owned() + &vec[1][1..]
-                }
-            };
-            println!("FILENAME: {}", filename);
 
-            // Get the file extension thats been requested
-            let file_ext = {
-                let vec: Vec<&str> = filename.split('.').collect();
-                if vec.len() >= 2 {
-                    &vec[1][..]
-                } else {
-                    ""
-                }
-            };
-            println!("FILE EXT: {}", file_ext);
+            println!("FILENAME: {}", http_request.filename);
+
+            println!("FILE EXT: {}", http_request.file_ext);
 
             // Convert the extension to a content type. Assume text/html
             // if file extension is unknown.
-            let content_type = match file_ext {
+            let content_type: &str = match &http_request.file_ext[..] {
                 "html" => "text/html",
                 "png" => "image/png",
                 "jpg" => "image/jpeg",
@@ -199,32 +180,36 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             println!("CONTENT TYPE: {}", content_type);
 
             // Send the requested file
-            let (status_line, file_content) = if filename == "/home/zico/zerver/website/" {
-                // For the website root, send the hello page
-                (
-                    "HTTP/1.1 200 OK",
-                    read_file("/home/zico/zerver/website/hello.html"),
-                )
+            let (status_line, file_content) =
+                if http_request.filename == "/home/zico/zerver/website/" {
+                    // For the website root, send the hello page
+                    (
+                        "HTTP/1.1 200 OK",
+                        read_file("/home/zico/zerver/website/hello.html"),
+                    )
 
-            // If the file is valid, send it
-            } else if is_file_valid(Path::new(&filename)) {
-                // Process SSI (Server Side Includes) for any text content
-                if content_type == "text/html"
-                    || content_type == "text/css"
-                    || content_type == "text/javascript"
-                {
-                    ("HTTP/1.1 200 OK", read_file_ssi(&filename, Vec::new()))
+                // If the file is valid, send it
+                } else if is_file_valid(Path::new(&http_request.filename)) {
+                    // Process SSI (Server Side Includes) for any text content
+                    if content_type == "text/html"
+                        || content_type == "text/css"
+                        || content_type == "text/javascript"
+                    {
+                        (
+                            "HTTP/1.1 200 OK",
+                            read_file_ssi(&http_request.filename, Vec::new()),
+                        )
+                    } else {
+                        ("HTTP/1.1 200 OK", read_file(&http_request.filename))
+                    }
+
+                // If the file requested is invalid or outside the website directory, send 404
                 } else {
-                    ("HTTP/1.1 200 OK", read_file(&filename))
-                }
-
-            // If the file requested is invalid or outside the website directory, send 404
-            } else {
-                (
-                    "HTTP/1.1 404 Not Found",
-                    read_file("/home/zico/zerver/website/404.html"),
-                )
-            };
+                    (
+                        "HTTP/1.1 404 Not Found",
+                        read_file("/home/zico/zerver/website/404.html"),
+                    )
+                };
 
             // Generate the cookie line
             let cookie_line = format!(
