@@ -110,8 +110,6 @@ pub fn read_file_ssi(filename: &str, param: Vec<&str>, authenticated: bool) -> V
         // Check if the ssi_filename is valid, and copy the content onto the file_string, or copy an error message in its place.
         if is_file_valid(Path::new(&ssi_filename), authenticated) {
             file_string.extend(read_file_ssi(&ssi_filename, included_parts, authenticated));
-        } else {
-            file_string.extend(b"Error: Unable to find ssi.");
         }
 
         // Copy back everything that was after the end token
