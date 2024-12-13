@@ -132,34 +132,38 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             };
             println!("CONTENT: {}", s);
 
-            let http_request = handler::http_request_from_string(s);
+            let http_request: handler::HttpRequest = handler::http_request_from_string(s);
 
             println!("REQUEST TYPE: \"{}\"", http_request.request_type);
             let mut cookie = "";
 
-            if http_request.request_type == "POST" && s.contains("psw=") {
-                let hash_string =
-                    &fs::read_to_string("/home/zico/zerver/secrets/pwd_hash.txt").unwrap();
-                let parsed_hash = PasswordHash::new(hash_string.trim()).unwrap();
-                let start_bytes = s.find("psw=").unwrap_or(0) + 4;
-                let mut pwd = s[start_bytes..].to_owned();
+            if http_request.request_type == "POST" {
+                match http_request.pwd {
+                    Some(pwd) => {
+                        let hash_string =
+                            &fs::read_to_string("/home/zico/zerver/secrets/pwd_hash.txt").unwrap();
+                        let parsed_hash = PasswordHash::new(hash_string.trim()).unwrap();
 
-                let salt_str = "YmFkIHNhbHQh";
-                let salt: Salt = salt_str.try_into().unwrap();
+                        let salt_str = "YmFkIHNhbHQh";
+                        let salt: Salt = salt_str.try_into().unwrap();
 
-                let argon2 = Argon2::default();
-                let hash = argon2.hash_password(pwd.as_bytes(), salt).unwrap();
+                        let argon2 = Argon2::default();
+                        let hash = argon2.hash_password(pwd.as_bytes(), salt).unwrap();
+                        println!("HASH: {}", hash);
 
-                if Argon2::default()
-                    .verify_password(pwd.as_bytes(), &parsed_hash)
-                    .is_ok()
-                {
-                    println!("TRUE");
-                    cookie = "tasty";
-                } else {
-                    println!("FALSE");
+                        if Argon2::default()
+                            .verify_password(pwd.as_bytes(), &parsed_hash)
+                            .is_ok()
+                        {
+                            println!("TRUE");
+                            cookie = "sID=tasty";
+                        } else {
+                            println!("FALSE");
+                        }
+                        println!("HASH: \"{}\"", hash);
+                    }
+                    None => println!("NO PWD"),
                 }
-                println!("HASH: \"{}\"", hash);
             }
 
             println!("FILENAME: {}", http_request.filename);
