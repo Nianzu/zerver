@@ -17,7 +17,7 @@ use tokio::net::TcpStream;
 use tokio_rustls::rustls::internal::pemfile::{certs, rsa_private_keys};
 use tokio_rustls::rustls::ServerConfig;
 use tokio_rustls::TlsAcceptor;
-mod handler;
+mod request_handler;
 
 fn load_tls_config() -> Arc<ServerConfig> {
     // Open the key and cert files
@@ -132,7 +132,8 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             };
             println!("CONTENT: {}", s);
 
-            let http_request: handler::HttpRequest = handler::http_request_from_string(s);
+            let http_request: request_handler::HttpRequest =
+                request_handler::http_request_from_string(s);
 
             println!("REQUEST TYPE: \"{}\"", http_request.request_type);
             let mut cookie = "";
@@ -140,27 +141,12 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             if http_request.request_type == "POST" {
                 match http_request.pwd {
                     Some(pwd) => {
-                        let hash_string =
-                            &fs::read_to_string("/home/zico/zerver/secrets/pwd_hash.txt").unwrap();
-                        let parsed_hash = PasswordHash::new(hash_string.trim()).unwrap();
-
-                        let salt_str = "YmFkIHNhbHQh";
-                        let salt: Salt = salt_str.try_into().unwrap();
-
-                        let argon2 = Argon2::default();
-                        let hash = argon2.hash_password(pwd.as_bytes(), salt).unwrap();
-                        println!("HASH: {}", hash);
-
-                        if Argon2::default()
-                            .verify_password(pwd.as_bytes(), &parsed_hash)
-                            .is_ok()
-                        {
+                        if request_handler::verify_password(pwd) {
                             println!("TRUE");
                             cookie = "sID=tasty";
                         } else {
                             println!("FALSE");
                         }
-                        println!("HASH: \"{}\"", hash);
                     }
                     None => println!("NO PWD"),
                 }
