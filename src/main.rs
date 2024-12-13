@@ -17,6 +17,7 @@ use tokio::net::TcpStream;
 use tokio_rustls::rustls::internal::pemfile::{certs, rsa_private_keys};
 use tokio_rustls::rustls::ServerConfig;
 use tokio_rustls::TlsAcceptor;
+mod authentication;
 mod request_handler;
 
 fn load_tls_config() -> Arc<ServerConfig> {
@@ -141,7 +142,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             if http_request.request_type == "POST" {
                 match http_request.pwd {
                     Some(pwd) => {
-                        if request_handler::verify_password(pwd) {
+                        if authentication::verify_password(pwd) {
                             println!("TRUE");
                             cookie = "sID=tasty";
                         } else {
