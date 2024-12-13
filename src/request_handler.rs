@@ -3,6 +3,7 @@ pub struct HttpRequest {
     pub filename: String,
     pub file_ext: String,
     pub pwd: Option<String>,
+    pub content_type: String,
 }
 
 pub fn http_request_from_string(s: &str) -> HttpRequest {
@@ -32,13 +33,25 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
             "".to_owned()
         }
     };
+
     let pwd_local: Option<String> = get_pwd(s);
+
+    let content_type_local: &str = match &file_ext_local[..] {
+        "html" => "text/html",
+        "png" => "image/png",
+        "jpg" => "image/jpeg",
+        "gif" => "image/gif",
+        "js" => "text/javascript",
+        "css" => "text/css",
+        _ => "text/html",
+    };
 
     HttpRequest {
         request_type: request_type_local,
         filename: filename_local,
         file_ext: file_ext_local,
         pwd: pwd_local,
+        content_type: content_type_local.to_string(),
     }
 }
 

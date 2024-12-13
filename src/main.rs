@@ -157,23 +157,12 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
 
             println!("FILE EXT: {}", http_request.file_ext);
 
-            // Convert the extension to a content type. Assume text/html
-            // if file extension is unknown.
-            let content_type: &str = match &http_request.file_ext[..] {
-                "html" => "text/html",
-                "png" => "image/png",
-                "jpg" => "image/jpeg",
-                "gif" => "image/gif",
-                "js" => "text/javascript",
-                "css" => "text/css",
-                _ => "text/html",
-            };
-            println!("CONTENT TYPE: {}", content_type);
+            println!("CONTENT TYPE: {}", http_request.content_type);
 
             // Send the requested file
             let (status_line, file_content) =
+                // For the website root, send the hello page
                 if http_request.filename == "/home/zico/zerver/website/" {
-                    // For the website root, send the hello page
                     (
                         "HTTP/1.1 200 OK",
                         read_file("/home/zico/zerver/website/hello.html"),
@@ -182,9 +171,9 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                 // If the file is valid, send it
                 } else if is_file_valid(Path::new(&http_request.filename)) {
                     // Process SSI (Server Side Includes) for any text content
-                    if content_type == "text/html"
-                        || content_type == "text/css"
-                        || content_type == "text/javascript"
+                    if http_request.content_type == "text/html"
+                        || http_request.content_type == "text/css"
+                        || http_request.content_type == "text/javascript"
                     {
                         (
                             "HTTP/1.1 200 OK",
@@ -209,10 +198,10 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             );
 
             // Generate a response header
-            let response = format!(
+            let response_header = format!(
                 "{}\r\nContent-Type: {}\r\n{}Content-Length: {}\r\n\r\n",
                 status_line,
-                content_type,
+                http_request.content_type,
                 if (cookie != "") {
                     cookie_line
                 } else {
@@ -222,7 +211,7 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
             );
 
             // Convert it to bytes and add the content body
-            let mut response = response.into_bytes();
+            let mut response = response_header.into_bytes();
             response.extend(file_content);
 
             // Write the file over the connection
