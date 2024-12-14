@@ -20,6 +20,7 @@ use tokio_rustls::TlsAcceptor;
 mod authentication;
 mod file_handler;
 mod request_handler;
+use tokio::sync::Mutex;
 
 fn load_tls_config() -> Arc<ServerConfig> {
     // Open the key and cert files
@@ -57,6 +58,8 @@ async fn main() {
     let tls_config = load_tls_config();
     let tls_acceptor = TlsAcceptor::from(tls_config);
 
+    let session_id = Arc::new(Mutex::new(String::new()));
+
     // Setup a listener on the TLS port
     let addr: SocketAddr = "0.0.0.0:443".parse().unwrap();
     let listener = TcpListener::bind(addr).await.unwrap();
@@ -68,25 +71,31 @@ async fn main() {
         // Create a TLS object to handle the connection
         let tls_acceptor = tls_acceptor.clone();
 
-        tokio::spawn(async move {
-            // Accept the connection in a new tokio thread
-            let tls_stream = match tls_acceptor.accept(stream).await {
-                Ok(v) => v,
-                Err(_) => return,
-            };
+        tokio::spawn({
+            let session_id = Arc::clone(&session_id);
+            async move {
+                // Accept the connection in a new tokio thread
+                let tls_stream = match tls_acceptor.accept(stream).await {
+                    Ok(v) => v,
+                    Err(_) => return,
+                };
 
-            // Process the connection
-            handle_connection(tls_stream).await;
+                // Process the connection
+                handle_connection(tls_stream, session_id).await;
+            }
         });
     }
 }
 
-async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream>) {
+async fn handle_connection(
+    mut stream: tokio_rustls::server::TlsStream<TcpStream>,
+    session_id: Arc<Mutex<String>>,
+) {
     // Read the connection request into a buffer
     let mut buffer = [0; 1024];
     match stream.read(&mut buffer).await {
         Ok(_) => {
-            let mut cookie_to_send = "";
+            let mut cookie_to_send = "".to_owned();
             let mut authenticated: bool = false;
 
             // Load that buffer into a string, return error page on bad request
@@ -110,7 +119,11 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
                     Some(pwd) => {
                         if authentication::verify_password(pwd) {
                             println!("TRUE");
-                            cookie_to_send = "sID=tasty";
+                            {
+                                let mut id = session_id.lock().await;
+                                *id = authentication::generate_session_id();
+                                cookie_to_send = "sID=".to_owned() + &*id;
+                            }
                         } else {
                             println!("FALSE");
                         }
@@ -121,7 +134,8 @@ async fn handle_connection(mut stream: tokio_rustls::server::TlsStream<TcpStream
 
             match http_request.cookie {
                 Some(cookie) => {
-                    if cookie == "tasty" {
+                    let guard = session_id.lock().await;
+                    if cookie == *guard {
                         authenticated = true;
                         println!("GOOD COOKIE");
                     } else {

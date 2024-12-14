@@ -2,6 +2,8 @@ use argon2::{
     password_hash::{Salt, SaltString},
     Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
 };
+use rand::rngs::OsRng;
+use rand::Rng;
 use std::fs;
 
 pub fn verify_password(pwd: String) -> bool {
@@ -17,4 +19,21 @@ pub fn verify_password(pwd: String) -> bool {
     Argon2::default()
         .verify_password(pwd.as_bytes(), &parsed_hash)
         .is_ok()
+}
+
+pub fn generate_session_id() -> String {
+    // Desired session ID length
+    let id_length = 32;
+    // Allowed characters
+    let charset: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    let mut session_id = String::with_capacity(id_length);
+    let mut rng = OsRng;
+    for _ in 0..id_length {
+        // Securely select a random character from the charset
+        let idx = rng.gen_range(0..charset.len());
+        session_id.push(charset[idx] as char);
+    }
+
+    session_id
 }
