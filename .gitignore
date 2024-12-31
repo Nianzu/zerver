@@ -9,3 +9,4 @@ cert.pem
 *.pdb
 *.swp
 *.swo
+secrets/**
