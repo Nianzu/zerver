@@ -15,6 +15,7 @@ pub fn verify_password(pwd: String) -> bool {
 
     // let argon2 = Argon2::default();
     // let hash = argon2.hash_password(pwd.as_bytes(), salt).unwrap();
+    // println!("{}",hash);
 
     Argon2::default()
         .verify_password(pwd.as_bytes(), &parsed_hash)

@@ -10,8 +10,9 @@ pub struct HttpRequest {
 }
 
 pub fn http_request_from_string(s: &str) -> HttpRequest {
+    let cleaned = s.replace("\0", "");
     let vec: Vec<&str> = s.split(' ').collect();
-
+    println!("{:?}", cleaned);
     let request_type_local: String = {
         if vec.len() < 1 || vec[0].len() < 1 {
             "UNKNOWN".to_owned()
@@ -37,7 +38,7 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
         }
     };
 
-    let pwd_local: Option<String> = get_pwd(s);
+    let pwd_local: Option<String> = get_pwd(&cleaned);
 
     let content_type_local: &str = match &file_ext_local[..] {
         "html" => "text/html",
@@ -48,7 +49,7 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
         "css" => "text/css",
         _ => "text/html",
     };
-    let local_cookie = get_cookie(s);
+    let local_cookie = get_cookie(&cleaned);
 
     HttpRequest {
         request_type: request_type_local,
@@ -61,17 +62,13 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
 }
 
 fn get_pwd(s: &str) -> Option<String> {
-    if s.contains("psw=") {
-        Some(
-            s.split("psw=").collect::<Vec<_>>()[1]
-                .lines()
-                .collect::<Vec<_>>()[0]
-                .to_string(),
-        )
+    if let Some(password_section) = s.split("psw=").nth(1) {
+        Some(password_section.lines().next().unwrap_or("").replace("\n", "").replace("\r", "").trim().to_owned())
     } else {
         None
     }
 }
+
 
 fn get_cookie(s: &str) -> Option<String> {
     if s.contains("Cookie: ") {

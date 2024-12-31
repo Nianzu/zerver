@@ -117,6 +117,7 @@ async fn handle_connection(
             if http_request.request_type == "POST" {
                 match http_request.pwd {
                     Some(pwd) => {
+                        println!("PWD: \"{}\"", pwd);
                         if authentication::verify_password(pwd) {
                             println!("TRUE");
                             {
