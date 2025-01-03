@@ -10,4 +10,4 @@ cert.pem
 *.swp
 *.swo
 secrets/**
-secured/**
+*/secured/**
