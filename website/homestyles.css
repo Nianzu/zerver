@@ -14,7 +14,9 @@
   
   li {
     list-style-position:inside;
-    margin-left: 10px
+    margin-left: 10px;
+    padding-left: 1.5em;
+    text-indent:-1.5em;
   }
 
   .sidebar {
@@ -44,7 +46,8 @@
   }
   
   .content {
-    margin-left: 120px;
+    margin-left: 400px;
+    margin-right: 300px;
     padding: 40px;
     font-family: 'Barlow', sans-serif;
     font-weight:400;
