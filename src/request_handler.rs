@@ -13,7 +13,7 @@ pub struct HttpRequest {
 pub fn http_request_from_string(s: &str) -> HttpRequest {
     let cleaned = s.replace("\0", "");
     let vec: Vec<&str> = s.split(' ').collect();
-    println!("{:?}", cleaned);
+    
     let request_type_local: String = {
         if vec.len() < 1 || vec[0].len() < 1 {
             "UNKNOWN".to_owned()
