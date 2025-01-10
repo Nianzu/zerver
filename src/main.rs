@@ -21,6 +21,7 @@ mod authentication;
 mod file_handler;
 mod request_handler;
 use tokio::sync::Mutex;
+use walkdir::WalkDir;
 
 fn load_tls_config() -> Arc<ServerConfig> {
     // Open the key and cert files
@@ -87,6 +88,102 @@ async fn main() {
     }
 }
 
+fn generate_file_tree(path: &str) -> serde_json::Value {
+    // Define the base directory
+    let base_dir = "/home/zico/zerver/website/secured/obsidian";
+
+    // Ensure the path stays within the base directory
+    let full_path = if path.starts_with(base_dir) {
+        path.to_string()
+    } else {
+        format!("{}/{}", base_dir, path.trim_start_matches('/'))
+    };
+
+    let mut tree = serde_json::json!([]);
+    for entry in WalkDir::new(&full_path).max_depth(1).into_iter().filter_map(|e| e.ok()) {
+        let file_name = entry.file_name().to_string_lossy().to_string();
+        let is_dir = entry.file_type().is_dir();
+        tree.as_array_mut().unwrap().push(serde_json::json!({
+            "name": file_name,
+            "is_dir": is_dir,
+            "path": entry.path().to_string_lossy().to_string()
+        }));
+    }
+    tree
+}
+
+async fn handle_edit_request(request: &request_handler::HttpRequest) -> (String, Vec<u8>) {
+    if request.request_type == "POST" {
+        let body = request.body.clone();
+
+        let params: Vec<&str> = str::from_utf8(body.as_bytes()).unwrap().split('&').collect();
+        let mut path = String::new();
+
+        for param in params {
+            let parts: Vec<&str> = param.split('=').collect();
+            if parts.len() == 2 {
+                if parts[0] == "path" {
+                    path = urlencoding::decode(parts[1]).unwrap().to_string();
+                }
+            }
+        }
+
+        // Base directory for secured files
+        let base_dir = "/home/zico/zerver/website/secured/obsidian";
+
+        // Avoid double appending the base path
+        let full_path = if path.starts_with(base_dir) {
+            path.clone() // Path is already full
+        } else {
+            format!("{}/{}", base_dir, path.trim_start_matches('/'))
+        };
+        println!("Requested file path: {}", full_path);
+
+
+        // Verify the file exists and is within the base directory
+        if Path::new(&full_path).exists() && Path::new(&full_path).is_file() {
+            let content = std::fs::read_to_string(&full_path).unwrap_or_else(|_| String::new());
+            (
+                "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+                content.into_bytes(),
+            )
+        } else {
+            (
+                "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+                b"File not found".to_vec(),
+            )
+        }
+    } else {
+        (
+            "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            b"Only POST method is allowed".to_vec(),
+        )
+    }
+}
+
+
+async fn handle_tree_request(request: &request_handler::HttpRequest) -> (String, Vec<u8>) {
+    if request.request_type == "POST" {
+        let body = request.body.clone();
+        let params: serde_json::Value = serde_json::from_slice(body.as_bytes()).unwrap();
+        let path = params.get("path").and_then(|v| v.as_str()).unwrap_or("");
+
+        let tree = generate_file_tree(path);
+        let response_body = serde_json::to_string(&tree).unwrap();
+
+        (
+            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n".to_string(),
+            response_body.into_bytes(),
+        )
+    } else {
+        (
+            "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            b"Only POST method is allowed".to_vec(),
+        )
+    }
+}
+
+
 async fn handle_connection(
     mut stream: tokio_rustls::server::TlsStream<TcpStream>,
     session_id: Arc<Mutex<String>>,
@@ -115,10 +212,9 @@ async fn handle_connection(
             println!("REQUEST TYPE: \"{}\"", http_request.request_type);
 
             if http_request.request_type == "POST" {
-                match http_request.pwd {
-                    Some(pwd) => {
+                    if let Some(pwd) = &http_request.pwd {
                         println!("PWD: \"{}\"", pwd);
-                        if authentication::verify_password(pwd) {
+                        if authentication::verify_password(pwd.to_owned()) {
                             println!("TRUE");
                             {
                                 let mut id = session_id.lock().await;
@@ -128,8 +224,22 @@ async fn handle_connection(
                         } else {
                             println!("FALSE");
                         }
+                    } else {
+                        println!("NO PWD");
                     }
-                    None => println!("NO PWD"),
+
+                if http_request.filename == "/home/zico/zerver/website/edit" {
+                    println!("edit");
+                    let response = handle_edit_request(&http_request).await;
+                    stream.write_all(response.0.as_bytes()).await.unwrap();
+                    stream.write_all(&response.1).await.unwrap();
+                    return;
+                } else if http_request.filename == "/home/zico/zerver/website/files" {
+                    println!("files");
+                    let response = handle_tree_request(&http_request).await;
+                    stream.write_all(response.0.as_bytes()).await.unwrap();
+                    stream.write_all(&response.1).await.unwrap();
+                    return;
                 }
             }
 

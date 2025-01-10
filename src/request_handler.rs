@@ -7,6 +7,7 @@ pub struct HttpRequest {
     pub pwd: Option<String>,
     pub content_type: String,
     pub cookie: Option<String>,
+    pub body: String,
 }
 
 pub fn http_request_from_string(s: &str) -> HttpRequest {
@@ -51,6 +52,13 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
     };
     let local_cookie = get_cookie(&cleaned);
 
+    // Split headers and body using the "\r\n\r\n" separator
+    let body_local = if let Some(body_start) = cleaned.split("\r\n\r\n").nth(1) {
+        body_start.trim().to_string()
+    } else {
+        String::new()
+    };
+
     HttpRequest {
         request_type: request_type_local,
         filename: filename_local,
@@ -58,6 +66,7 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
         pwd: pwd_local,
         content_type: content_type_local.to_string(),
         cookie: local_cookie,
+        body: body_local,
     }
 }
 
