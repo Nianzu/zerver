@@ -262,7 +262,8 @@ async fn handle_connection(
     let mut cookie_to_send = "".to_owned();
     let mut authenticated: bool = false;
 
-    let http_request: request_handler::HttpRequest = request_handler::http_request_from_string(&request_string);
+    let http_request: request_handler::HttpRequest =
+        request_handler::http_request_from_string(&request_string);
 
     println!("REQUEST TYPE: \"{}\"", http_request.request_type);
 
@@ -282,7 +283,24 @@ async fn handle_connection(
         } else {
             println!("NO PWD");
         }
+    }
 
+    match &http_request.cookie {
+        Some(cookie) => {
+            let guard = session_id.lock().await;
+            if cookie == &*guard {
+                authenticated = true;
+                println!("GOOD COOKIE");
+            } else {
+                println!("BAD COOKIE \"{}\"", cookie);
+            }
+        }
+        None => {
+            println!("NO COOKIE")
+        }
+    }
+
+    if http_request.request_type == "POST" {
         if http_request.filename == "/home/zico/zerver/website/edit" {
             println!("edit");
             let response = handle_edit_request(&http_request).await;
@@ -295,21 +313,6 @@ async fn handle_connection(
             stream.write_all(response.0.as_bytes()).await.unwrap();
             stream.write_all(&response.1).await.unwrap();
             return;
-        }
-    }
-
-    match http_request.cookie {
-        Some(cookie) => {
-            let guard = session_id.lock().await;
-            if cookie == *guard {
-                authenticated = true;
-                println!("GOOD COOKIE");
-            } else {
-                println!("BAD COOKIE \"{}\"", cookie);
-            }
-        }
-        None => {
-            println!("NO COOKIE")
         }
     }
 
