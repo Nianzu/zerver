@@ -1,8 +1,8 @@
 use argon2::{
-    password_hash::{Salt, SaltString},
-    Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
+    password_hash::{Salt, SaltString}, Argon2, Params, PasswordHash, PasswordHasher, PasswordVerifier
 };
 use hyper::Response;
+use serde_json::value;
 use std::fs::read_to_string;
 use std::fs::File;
 use std::io::BufReader;
@@ -23,6 +23,7 @@ mod file_handler;
 mod request_handler;
 use tokio::sync::Mutex;
 use walkdir::WalkDir;
+use std::io::Write;
 
 fn load_tls_config() -> Arc<ServerConfig> {
     // Open the key and cert files
@@ -168,6 +169,68 @@ async fn handle_edit_request(request: &request_handler::HttpRequest) -> (String,
     }
 }
 
+async fn handle_overwrite_request(request: &request_handler::HttpRequest) -> (String, Vec<u8>) {
+    if request.request_type == "POST" {
+        let body = request.body.clone();
+        let mut path = String::new();
+        let mut content =String::new();
+
+        // Base directory for secured files
+        let base_dir = "/home/zico/zerver/website/secured/obsidian";
+
+        let params: Vec<&str> = str::from_utf8(body.as_bytes())
+            .unwrap()
+            .split('&')
+            .collect();
+
+
+        for param in params {
+            if let Some((key,value)) = param.split_once('='){
+                let value = value.replace('+'," ");
+                let decoded_key = urlencoding::decode(key).unwrap_or_default();
+                let decoded_value = urlencoding::decode(&value).unwrap_or_default();
+
+                match decoded_key.as_ref() {
+                    "path" => path = decoded_value.to_string(),
+                    "content" => content = decoded_value.to_string(),
+                    _ => {}
+                }
+            }
+        }
+
+        println!("PATH: {}", path);
+        println!("CONTENT: {}", content);
+
+        // Avoid double appending the base path
+        let full_path = if path.starts_with(base_dir) {
+            path.clone() // Path is already full
+        } else {
+            format!("{}/{}", base_dir, path.trim_start_matches('/'))
+        };
+        println!("Requested file path: {}", full_path);
+
+        // Create dirs that we might need 
+        let path_path = std::path::Path::new(&path);
+        let prefix = path_path.parent().unwrap();
+        std::fs::create_dir_all(prefix).unwrap();
+
+        let mut f = std::fs::OpenOptions::new().write(true).truncate(true).open(path).expect("issue creating file object");
+        f.write_all(content.as_bytes()).expect("issue writing file");
+        f.flush().expect("issue flushing file");
+
+        let content = std::fs::read_to_string(&full_path).unwrap_or_else(|_| String::new());
+            (
+                "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+                content.into_bytes(),
+            )
+    } else {
+        (
+            "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            b"Only POST method is allowed".to_vec(),
+        )
+    }
+}
+
 async fn handle_tree_request(request: &request_handler::HttpRequest) -> (String, Vec<u8>) {
     if request.request_type == "POST" {
         let body = request.body.clone();
@@ -277,11 +340,7 @@ async fn handle_connection(
                     *id = authentication::generate_session_id();
                     cookie_to_send = "sID=".to_owned() + &*id;
                 }
-            } else {
-                println!("FALSE");
             }
-        } else {
-            println!("NO PWD");
         }
     }
 
@@ -290,9 +349,6 @@ async fn handle_connection(
             let guard = session_id.lock().await;
             if cookie == &*guard {
                 authenticated = true;
-                println!("GOOD COOKIE");
-            } else {
-                println!("BAD COOKIE \"{}\"", cookie);
             }
         }
         None => {
@@ -300,7 +356,7 @@ async fn handle_connection(
         }
     }
 
-    if http_request.request_type == "POST" {
+    if http_request.request_type == "POST" && authenticated {
         if http_request.filename == "/home/zico/zerver/website/edit" {
             println!("edit");
             let response = handle_edit_request(&http_request).await;
@@ -313,6 +369,12 @@ async fn handle_connection(
             stream.write_all(response.0.as_bytes()).await.unwrap();
             stream.write_all(&response.1).await.unwrap();
             return;
+        } else if http_request.filename == "/home/zico/zerver/website/overwrite" {
+            println!("overwrite");
+            let response = handle_overwrite_request(&http_request).await;
+            stream.write_all(response.0.as_bytes()).await.unwrap();
+            stream.write_all(&response.1).await.unwrap();
+            return;
         }
     }
 
@@ -321,6 +383,10 @@ async fn handle_connection(
     println!("FILE EXT: {}", http_request.file_ext);
 
     println!("CONTENT TYPE: {}", http_request.content_type);
+    println!(
+        "BODY: {}",
+        urlencoding::decode(&http_request.body).unwrap().to_string()
+    );
 
     // Send the requested file
     let (status_line, file_content) =
