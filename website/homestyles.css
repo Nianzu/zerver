@@ -107,14 +107,14 @@
     font-weight:900;
   }
 
-  img {
+  img:not(.icon) {
     margin: 3px;
     border: 4px solid #230404;
     border-radius: 12px;
     object-fit: cover;
  }
  
- img:hover{
+ img:not(.icon):hover{
     border: 4px solid #981414;
  }
  
