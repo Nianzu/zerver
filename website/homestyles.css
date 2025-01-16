@@ -217,3 +217,9 @@ button {
     background-color: #7c1010;
     cursor: default;
 }
+
+.file-tree{
+    float: left;
+    padding: 20px;
+    padding-left: 150px;
+  }
