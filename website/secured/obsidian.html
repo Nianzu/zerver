@@ -19,7 +19,7 @@
             cursor: pointer;
             margin-bottom: 7px;
             font-family: monospace;
-            font-size:large;
+            font-size: large;
             max-width: 200px;
             overflow: hidden;
         }
@@ -37,7 +37,13 @@
             margin-bottom: 20px;
             padding: 5px;
             font-family: monospace;
-            font-size:large;
+            font-size: large;
+        }
+
+        .path {
+            font-family: monospace;
+            font-size: larger;
+            padding: 5px;
         }
 
         [contenteditable] {
@@ -95,8 +101,8 @@
                 const content = await response.text();
                 const textarea = document.querySelector('div[name="file-content"]');
                 textarea.innerText = content;
-                const pathTextarea = document.querySelector('textarea[name="path"]');
-                pathTextarea.value = path;
+                const pathTextarea = document.querySelector('div[name="path"]');
+                pathTextarea.innerText = path;
             } else {
                 alert('Error loading file.');
             }
@@ -105,7 +111,7 @@
         async function saveFile(event) {
             event.preventDefault();
 
-            const path = document.querySelector('textarea[name="path"]').value;
+            const path = document.querySelector('div[name="path"]').value;
             const content = document.querySelector('div[name="file-content"]').innerText;
 
             const response = await fetch('/overwrite', {
@@ -138,7 +144,7 @@
 
 
         <form id="save-form">
-            <textarea name="path" readonly style="width: 100%; height: 30px;"></textarea>
+            <div class="path" name="path" readonly ></div>
             <div class="file-content" name="file-content" contenteditable="true"></div>
             <button type="submit">Save</button>
             <span id="saved-feedback" class="saved-feedback">Saved!</span>
