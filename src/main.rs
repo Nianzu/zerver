@@ -95,10 +95,11 @@ fn generate_file_tree(path: &str) -> serde_json::Value {
     let base_dir = "/home/zico/zerver/website/secured/obsidian";
 
     // Ensure the path stays within the base directory
-    let full_path = if path.starts_with(base_dir) {
+    let starting_path = Path::new(path).canonicalize().expect("error");
+    let full_path = if starting_path.starts_with(base_dir) {
         path.to_string()
     } else {
-        format!("{}/{}", base_dir, path.trim_start_matches('/'))
+        base_dir.to_owned()
     };
 
     let mut tree = serde_json::json!([]);
@@ -107,12 +108,12 @@ fn generate_file_tree(path: &str) -> serde_json::Value {
         .into_iter()
         .filter_map(|e| e.ok())
     {
-        let file_name = entry.file_name().to_string_lossy().to_string();
+        let file_name = entry.path().canonicalize().expect("error").file_name().expect("error").to_string_lossy().to_string();
         let is_dir = entry.file_type().is_dir();
         tree.as_array_mut().unwrap().push(serde_json::json!({
             "name": file_name,
             "is_dir": is_dir,
-            "path": entry.path().to_string_lossy().to_string()
+            "path": entry.path().canonicalize().expect("error").to_string_lossy().to_string()
         }));
     }
     tree

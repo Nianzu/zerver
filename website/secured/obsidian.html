@@ -20,6 +20,7 @@
             margin-bottom: 7px;
             font-family: monospace;
             font-size: large;
+            font-size: large;
             max-width: 200px;
             overflow: hidden;
         }
@@ -67,6 +68,20 @@
             const files = await response.json();
             const fileTree = document.getElementById('file-tree');
             fileTree.innerHTML = ''; // Clear existing content
+
+
+            const tmp = document.createElement('div');
+            tmp.setAttribute('class', 'file-tree-item');
+            tmp.textContent = "..";
+            var img = document.createElement('IMG');
+            img.setAttribute('src', '../folder_w.png');
+            img.setAttribute('style', "width:20px;");
+            img.setAttribute('class', "icon");
+            tmp.prepend(img);
+            tmp.onclick = () => { loadFolder(path + "/.."); };
+            fileTree.appendChild(tmp);
+
+
 
             files.forEach(file => {
                 const fileElement = document.createElement('div');
