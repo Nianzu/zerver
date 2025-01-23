@@ -21,7 +21,7 @@
 
   .sidebar {
     background-color: #7c1010;
-    width: 120px;
+    width: 6.5vw;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -37,7 +37,7 @@
   
   .sidebar li {
     margin-bottom: 15px;
-    margin-left: 0px
+    margin-left: 0px;
   }
   
   .sidebar li a {
@@ -46,8 +46,8 @@
   }
   
   .content {
-    margin-left: 400px;
-    margin-right: 300px;
+    margin-left: 20vw;
+    margin-right: 20vw;
     padding: 40px;
     font-family: 'Barlow', sans-serif;
     font-weight:400;
