@@ -126,7 +126,7 @@
         async function saveFile(event) {
             event.preventDefault();
 
-            const path = document.querySelector('div[name="path"]').value;
+            const path = document.querySelector('div[name="path"]').innerText;
             const content = document.querySelector('div[name="file-content"]').innerText;
 
             const response = await fetch('/overwrite', {
