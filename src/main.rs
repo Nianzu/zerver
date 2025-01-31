@@ -307,6 +307,45 @@ async fn handle_create_request(request: &request_handler::HttpRequest) -> (Strin
     }
 }
 
+async fn handle_delete_request(request: &request_handler::HttpRequest) -> (String, Vec<u8>) {
+    if request.request_type == "POST" {
+        let body = request.body.clone();
+        let params: serde_json::Value = serde_json::from_slice(body.as_bytes()).unwrap();
+        let path = params.get("path").and_then(|v| v.as_str()).unwrap_or("");
+
+        // Base directory for secured files
+        let base_dir = "/home/zico/zerver/website/secured/obsidian";
+
+        println!("PATH: {}", path);
+
+        // Avoid double appending the base path
+        let full_path = if path.starts_with(base_dir) {
+            path.clone().to_owned() // Path is already full
+        } else {
+            format!("{}/{}", base_dir, path.trim_start_matches('/'))
+        };
+        println!("Requested file path: {}", full_path);
+
+        // Create dirs that we might need
+        let path_path = std::path::Path::new(&full_path);
+        let prefix = path_path.parent().unwrap();
+        std::fs::create_dir_all(prefix).unwrap();
+
+        let mut f = std::fs::remove_file(&full_path.to_owned())
+            .expect("issue removing file object");
+
+        let content = "".to_owned();
+        (
+            "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            content.into_bytes(),
+        )
+    } else {
+        (
+            "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            b"Only POST method is allowed".to_vec(),
+        )
+    }
+}
 fn get_content_length(request: &str) -> Option<usize> {
     for line in request.lines() {
         if line.to_lowercase().starts_with("content-length:") {
@@ -433,6 +472,12 @@ async fn handle_connection(
         } else if http_request.filename == "/home/zico/zerver/website/create" {
             println!("create");
             let response = handle_create_request(&http_request).await;
+            stream.write_all(response.0.as_bytes()).await.unwrap();
+            stream.write_all(&response.1).await.unwrap();
+            return;
+        } else if http_request.filename == "/home/zico/zerver/website/delete" {
+            println!("create");
+            let response = handle_delete_request(&http_request).await;
             stream.write_all(response.0.as_bytes()).await.unwrap();
             stream.write_all(&response.1).await.unwrap();
             return;
