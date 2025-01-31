@@ -52,7 +52,71 @@
         }
 
         [contenteditable] {
+            padding: 10px;
             outline: 1px solid #7c1010;
+            font-family: monospace;
+            overflow-wrap: break-word;
+            border-radius: 10px;
+        }
+
+        .ob_h1 {
+            display: block;
+            font-size: 2em;
+            margin-top: 0.67em;
+            margin-bottom: 0.67em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h2 {
+            display: block;
+            font-size: 1.5em;
+            margin-top: 0.83em;
+            margin-bottom: 0.83em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h3 {
+            display: block;
+            font-size: 1.17em;
+            margin-top: 1em;
+            margin-bottom: 1em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h4 {
+            display: block;
+            font-size: 1em;
+            margin-top: 1.33em;
+            margin-bottom: 1.33em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h5 {
+            display: block;
+            font-size: .83em;
+            margin-top: 1.67em;
+            margin-bottom: 1.67em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h6 {
+            display: block;
+            font-size: .67em;
+            margin-top: 2.33em;
+            margin-bottom: 2.33em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -65,6 +129,18 @@
 
         let folder_path = "";
         let file_path = "";
+
+        function countHashtagsAtStart(str) {
+            let count = 0;
+            for (let i = 0; i < str.length; i++) {
+                if (str[i] === '#') {
+                    count++;
+                } else {
+                    break; // Stop counting once a non-hashtag character is encountered
+                }
+            }
+            return count;
+        }
 
         function compare(a, b) {
             if (a.is_dir && !b.is_dir) { return -1; }
@@ -153,14 +229,14 @@
                 const content = await response.text();
                 const textarea = document.querySelector('div[name="file-content"]');
                 textarea.innerHTML = '';
-                console.log(JSON.stringify(content));
 
                 const lines = content.split('\n');
                 lines.forEach(line => {
-                    console.log(line);
                     if (!line) {
                         const br = document.createElement('br');
-                        textarea.appendChild(br);
+                        const div = document.createElement('div');
+                        div.appendChild(br);
+                        textarea.appendChild(div);
                     }
                     else {
                         const div = document.createElement('div');
@@ -170,7 +246,7 @@
                 })
                 textarea.removeChild(textarea.lastChild);
 
-                // textarea.innerText = content;
+                applyFormatting(textarea);
 
                 const pathTextarea = document.querySelector('div[name="path"]');
                 pathTextarea.innerText = path;
@@ -184,7 +260,7 @@
 
             // Remove divs to prevent double-entering
             const textarea = document.querySelector('div[name="file-content"]');
-            textarea.innerHTML = textarea.innerHTML.replaceAll('<div><br></div>', '<br>').replaceAll('<div>', '').replaceAll('<br></div>', '<br>').replaceAll('</div>', '<br>');
+            textarea.innerHTML = textarea.innerHTML.replaceAll(/<div[^>]*><br><\/div>/g, '<br>').replaceAll(/<div[^>]*>/g, '').replaceAll('<br></div>', '<br>').replaceAll('</div>', '<br>');
 
             // Load content and path
             const path = document.querySelector('div[name="path"]').innerText;
@@ -270,6 +346,47 @@
 
                 saveFile(e);
             }
+        });
+
+        function applyFormatting(content) {
+            var elements = content.children;
+
+
+            for (var i = 0; i < elements.length; i++) {
+                const element = elements[i];
+                console.log(element);
+                if (element.tagName == 'DIV') {
+                    console.log(countHashtagsAtStart(element.textContent));
+                    switch (countHashtagsAtStart(element.textContent)) {
+                        case 1:
+                            element.setAttribute('class', 'ob_h1');
+                            break;
+                        case 2:
+                            element.setAttribute('class', 'ob_h2');
+                            break;
+                        case 3:
+                            element.setAttribute('class', 'ob_h3');
+                            break;
+                        case 4:
+                            element.setAttribute('class', 'ob_h4');
+                            break;
+                        case 5:
+                            element.setAttribute('class', 'ob_h5');
+                            break;
+                        case 6:
+                            element.setAttribute('class', 'ob_h6');
+                            break;
+                        default:
+                            element.setAttribute('class', '');
+
+                            break;
+                    }
+                }
+            }
+        }
+
+        document.querySelector('div[name="file-content"]').addEventListener('input', function (e) {
+            applyFormatting(e.target);
         });
     </script>
 </body>
