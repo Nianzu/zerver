@@ -17,12 +17,16 @@
             display: flex;
             align-items: center;
             cursor: pointer;
-            margin-bottom: 7px;
             font-family: monospace;
             font-size: large;
             font-size: large;
             max-width: 200px;
             overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .file-tree-item span{
+            padding: 3px;
         }
 
         .file-tree-item:hover {
@@ -62,6 +66,42 @@
         let folder_path = "";
         let file_path = "";
 
+        function compare(a, b) {
+            if (a.is_dir && !b.is_dir) { return -1; }
+            if (!a.is_dir && b.is_dir) { return 1; }
+            if (a.path.toLowerCase() < b.path.toLowerCase()) {
+                return -1;
+            }
+            if (a.path.toLowerCase() > b.path.toLowerCase()) {
+                return 1;
+            }
+            return 0;
+        }
+
+        function create_file_tree_item(file)
+        {
+            const fileElement = document.createElement('div');
+                fileElement.setAttribute('class', 'file-tree-item');
+                const textElement = document.createElement('span');
+                textElement.textContent = file.name; 
+                fileElement.appendChild(textElement);
+                fileElement.onclick = () => {
+                    if (file.is_dir) {
+                        loadFolder(file.path); // Load child directory
+                    } else {
+                        loadFile(file.path); // Load file for editing
+                    }
+                };
+                if (file.is_dir) {
+                    var img = document.createElement('IMG');
+                    img.setAttribute('src', '../folder_w.png');
+                    img.setAttribute('style', "width:20px;");
+                    img.setAttribute('class', "icon");
+                    fileElement.prepend(img);
+                }
+                return fileElement;
+        }
+
         async function loadFolder(path = "") {
 
             const response = await fetch('/files', {
@@ -87,26 +127,10 @@
             fileTree.appendChild(tmp);
 
             folder_path = files[0].path;
+            files.sort(compare);
 
             files.forEach(file => {
-                const fileElement = document.createElement('div');
-                fileElement.setAttribute('class', 'file-tree-item');
-                fileElement.textContent = file.name;
-                fileElement.onclick = () => {
-                    if (file.is_dir) {
-                        loadFolder(file.path); // Load child directory
-                    } else {
-                        loadFile(file.path); // Load file for editing
-                    }
-                };
-                if (file.is_dir) {
-                    var img = document.createElement('IMG');
-                    img.setAttribute('src', '../folder_w.png');
-                    img.setAttribute('style', "width:20px;");
-                    img.setAttribute('class', "icon");
-                    fileElement.prepend(img);
-                }
-                fileTree.appendChild(fileElement);
+                fileTree.appendChild(create_file_tree_item(file));
             });
 
             const newBtn = document.createElement('button');
@@ -175,7 +199,7 @@
         }
 
         async function createFile() {
-            var name = prompt("Please enter a file name/path:","");
+            var name = prompt("Please enter a file name/path:", "");
             if (name != "" && name != null) {
                 var path = folder_path + "/" + name;
                 const response = await fetch('/create', {
