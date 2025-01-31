@@ -25,7 +25,7 @@
             margin-bottom: 14px;
         }
 
-        .file-tree-item span{
+        .file-tree-item span {
             padding: 3px;
         }
 
@@ -78,28 +78,27 @@
             return 0;
         }
 
-        function create_file_tree_item(file)
-        {
+        function create_file_tree_item(file) {
             const fileElement = document.createElement('div');
-                fileElement.setAttribute('class', 'file-tree-item');
-                const textElement = document.createElement('span');
-                textElement.textContent = file.name; 
-                fileElement.appendChild(textElement);
-                fileElement.onclick = () => {
-                    if (file.is_dir) {
-                        loadFolder(file.path); // Load child directory
-                    } else {
-                        loadFile(file.path); // Load file for editing
-                    }
-                };
+            fileElement.setAttribute('class', 'file-tree-item');
+            const textElement = document.createElement('span');
+            textElement.textContent = file.name;
+            fileElement.appendChild(textElement);
+            fileElement.onclick = () => {
                 if (file.is_dir) {
-                    var img = document.createElement('IMG');
-                    img.setAttribute('src', '../folder_w.png');
-                    img.setAttribute('style', "width:20px;");
-                    img.setAttribute('class', "icon");
-                    fileElement.prepend(img);
+                    loadFolder(file.path); // Load child directory
+                } else {
+                    loadFile(file.path); // Load file for editing
                 }
-                return fileElement;
+            };
+            if (file.is_dir) {
+                var img = document.createElement('IMG');
+                img.setAttribute('src', '../folder_w.png');
+                img.setAttribute('style', "width:20px;");
+                img.setAttribute('class', "icon");
+                fileElement.prepend(img);
+            }
+            return fileElement;
         }
 
         async function loadFolder(path = "") {
@@ -153,7 +152,26 @@
             if (response.ok) {
                 const content = await response.text();
                 const textarea = document.querySelector('div[name="file-content"]');
-                textarea.innerText = content;
+                textarea.innerHTML = '';
+                console.log(JSON.stringify(content));
+
+                const lines = content.split('\n');
+                lines.forEach(line => {
+                    console.log(line);
+                    if (!line) {
+                        const br = document.createElement('br');
+                        textarea.appendChild(br);
+                    }
+                    else {
+                        const div = document.createElement('div');
+                        div.textContent = line;
+                        textarea.appendChild(div);
+                    }
+                })
+                textarea.removeChild(textarea.lastChild);
+
+                // textarea.innerText = content;
+
                 const pathTextarea = document.querySelector('div[name="path"]');
                 pathTextarea.innerText = path;
             } else {
@@ -164,8 +182,13 @@
         async function saveFile(event) {
             event.preventDefault();
 
+            // Remove divs to prevent double-entering
+            const textarea = document.querySelector('div[name="file-content"]');
+            textarea.innerHTML = textarea.innerHTML.replaceAll('<div><br></div>', '<br>').replaceAll('<div>', '').replaceAll('<br></div>', '<br>').replaceAll('</div>', '<br>');
+
+            // Load content and path
             const path = document.querySelector('div[name="path"]').innerText;
-            const content = document.querySelector('div[name="file-content"]').innerText;
+            const content = textarea.innerText;
 
             const response = await fetch('/overwrite', {
                 method: 'POST',
@@ -178,6 +201,7 @@
                 feedback.textContent = 'Saved!';
                 feedback.style.display = 'inline';
                 setTimeout(() => (feedback.style.display = 'none'), 3000); // Hide after 3 seconds
+                loadFile(path);
             } else {
                 feedback.textContent = 'Error saving!';
                 feedback.style.color = 'red';
