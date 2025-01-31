@@ -1,5 +1,6 @@
 use argon2::{
-    password_hash::{Salt, SaltString}, Argon2, Params, PasswordHash, PasswordHasher, PasswordVerifier
+    password_hash::{Salt, SaltString},
+    Argon2, Params, PasswordHash, PasswordHasher, PasswordVerifier,
 };
 use hyper::Response;
 use serde_json::value;
@@ -21,9 +22,9 @@ use tokio_rustls::TlsAcceptor;
 mod authentication;
 mod file_handler;
 mod request_handler;
+use std::io::Write;
 use tokio::sync::Mutex;
 use walkdir::WalkDir;
-use std::io::Write;
 
 fn load_tls_config() -> Arc<ServerConfig> {
     // Open the key and cert files
@@ -108,7 +109,14 @@ fn generate_file_tree(path: &str) -> serde_json::Value {
         .into_iter()
         .filter_map(|e| e.ok())
     {
-        let file_name = entry.path().canonicalize().expect("error").file_name().expect("error").to_string_lossy().to_string();
+        let file_name = entry
+            .path()
+            .canonicalize()
+            .expect("error")
+            .file_name()
+            .expect("error")
+            .to_string_lossy()
+            .to_string();
         let is_dir = entry.file_type().is_dir();
         tree.as_array_mut().unwrap().push(serde_json::json!({
             "name": file_name,
@@ -174,7 +182,7 @@ async fn handle_overwrite_request(request: &request_handler::HttpRequest) -> (St
     if request.request_type == "POST" {
         let body = request.body.clone();
         let mut path = String::new();
-        let mut content =String::new();
+        let mut content = String::new();
 
         // Base directory for secured files
         let base_dir = "/home/zico/zerver/website/secured/obsidian";
@@ -184,10 +192,9 @@ async fn handle_overwrite_request(request: &request_handler::HttpRequest) -> (St
             .split('&')
             .collect();
 
-
         for param in params {
-            if let Some((key,value)) = param.split_once('='){
-                let value = value.replace('+'," ");
+            if let Some((key, value)) = param.split_once('=') {
+                let value = value.replace('+', " ");
                 let decoded_key = urlencoding::decode(key).unwrap_or_default();
                 let decoded_value = urlencoding::decode(&value).unwrap_or_default();
 
@@ -210,20 +217,24 @@ async fn handle_overwrite_request(request: &request_handler::HttpRequest) -> (St
         };
         println!("Requested file path: {}", full_path);
 
-        // Create dirs that we might need 
+        // Create dirs that we might need
         let path_path = std::path::Path::new(&path);
         let prefix = path_path.parent().unwrap();
         std::fs::create_dir_all(prefix).unwrap();
 
-        let mut f = std::fs::OpenOptions::new().write(true).truncate(true).open(path).expect("issue creating file object");
+        let mut f = std::fs::OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open(path)
+            .expect("issue creating file object");
         f.write_all(content.as_bytes()).expect("issue writing file");
         f.flush().expect("issue flushing file");
 
         let content = std::fs::read_to_string(&full_path).unwrap_or_else(|_| String::new());
-            (
-                "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n".to_string(),
-                content.into_bytes(),
-            )
+        (
+            "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            content.into_bytes(),
+        )
     } else {
         (
             "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\n".to_string(),
@@ -244,6 +255,49 @@ async fn handle_tree_request(request: &request_handler::HttpRequest) -> (String,
         (
             "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n".to_string(),
             response_body.into_bytes(),
+        )
+    } else {
+        (
+            "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            b"Only POST method is allowed".to_vec(),
+        )
+    }
+}
+
+async fn handle_create_request(request: &request_handler::HttpRequest) -> (String, Vec<u8>) {
+    if request.request_type == "POST" {
+        let body = request.body.clone();
+        let params: serde_json::Value = serde_json::from_slice(body.as_bytes()).unwrap();
+        let path = params.get("path").and_then(|v| v.as_str()).unwrap_or("");
+
+        // Base directory for secured files
+        let base_dir = "/home/zico/zerver/website/secured/obsidian";
+
+        println!("PATH: {}", path);
+
+        // Avoid double appending the base path
+        let full_path = if path.starts_with(base_dir) {
+            path.clone().to_owned() // Path is already full
+        } else {
+            format!("{}/{}", base_dir, path.trim_start_matches('/'))
+        };
+        println!("Requested file path: {}", full_path);
+
+        // Create dirs that we might need
+        let path_path = std::path::Path::new(&full_path);
+        let prefix = path_path.parent().unwrap();
+        std::fs::create_dir_all(prefix).unwrap();
+
+        let mut f = std::fs::OpenOptions::new()
+        .create_new(true)
+            .write(true)
+            .open(&full_path.to_owned())
+            .expect("issue creating file object");
+
+        let content = std::fs::read_to_string(&full_path).unwrap_or_else(|_| String::new());
+        (
+            "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            content.into_bytes(),
         )
     } else {
         (
@@ -373,6 +427,12 @@ async fn handle_connection(
         } else if http_request.filename == "/home/zico/zerver/website/overwrite" {
             println!("overwrite");
             let response = handle_overwrite_request(&http_request).await;
+            stream.write_all(response.0.as_bytes()).await.unwrap();
+            stream.write_all(&response.1).await.unwrap();
+            return;
+        } else if http_request.filename == "/home/zico/zerver/website/create" {
+            println!("create");
+            let response = handle_create_request(&http_request).await;
             stream.write_all(response.0.as_bytes()).await.unwrap();
             stream.write_all(&response.1).await.unwrap();
             return;
