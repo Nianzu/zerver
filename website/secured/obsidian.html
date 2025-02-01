@@ -202,10 +202,16 @@
             fileTree.appendChild(tmp);
 
             folder_path = files[0].path;
+            
+            // Hide the current folder
+            files.shift();
             files.sort(compare);
 
+            // Hide the git folder
             files.forEach(file => {
-                fileTree.appendChild(create_file_tree_item(file));
+                if (file.name != '.git') {
+                    fileTree.appendChild(create_file_tree_item(file));
+                }
             });
 
             const newBtn = document.createElement('button');
