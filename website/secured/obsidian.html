@@ -118,6 +118,10 @@
             margin-right: 0;
             font-weight: bold;
         }
+
+        .ob_code {
+            background: #530b0b;
+        }
     </style>
 </head>
 
@@ -358,34 +362,45 @@
         function applyFormatting(content) {
             var elements = content.children;
 
-
+            var codeBlock = false;
+            var prevCodeBlock = false;
             for (var i = 0; i < elements.length; i++) {
                 const element = elements[i];
                 if (element.tagName == 'DIV') {
-                    switch (countHashtagsAtStart(element.textContent)) {
-                        case 1:
-                            element.setAttribute('class', 'ob_h1');
-                            break;
-                        case 2:
-                            element.setAttribute('class', 'ob_h2');
-                            break;
-                        case 3:
-                            element.setAttribute('class', 'ob_h3');
-                            break;
-                        case 4:
-                            element.setAttribute('class', 'ob_h4');
-                            break;
-                        case 5:
-                            element.setAttribute('class', 'ob_h5');
-                            break;
-                        case 6:
-                            element.setAttribute('class', 'ob_h6');
-                            break;
-                        default:
-                            element.setAttribute('class', '');
+                    const isCodeWall = element.textContent.startsWith('```');
+                    if (isCodeWall || codeBlock) {
+                        element.setAttribute('class', 'ob_code');
+                        if (isCodeWall) {
+                            codeBlock = !codeBlock;
+                        }
 
-                            break;
+                    } else {
+                        switch (countHashtagsAtStart(element.textContent)) {
+                            case 1:
+                                element.setAttribute('class', 'ob_h1');
+                                break;
+                            case 2:
+                                element.setAttribute('class', 'ob_h2');
+                                break;
+                            case 3:
+                                element.setAttribute('class', 'ob_h3');
+                                break;
+                            case 4:
+                                element.setAttribute('class', 'ob_h4');
+                                break;
+                            case 5:
+                                element.setAttribute('class', 'ob_h5');
+                                break;
+                            case 6:
+                                element.setAttribute('class', 'ob_h6');
+                                break;
+                            default:
+                                element.setAttribute('class', '');
+
+                                break;
+                        }
                     }
+
                 }
             }
         }
