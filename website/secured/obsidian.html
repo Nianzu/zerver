@@ -202,7 +202,7 @@
             fileTree.appendChild(tmp);
 
             folder_path = files[0].path;
-            
+
             // Hide the current folder
             files.shift();
             files.sort(compare);
@@ -266,11 +266,13 @@
 
             // Remove divs to prevent double-entering
             const textarea = document.querySelector('div[name="file-content"]');
+            const backup = textarea.innerHTML;
             textarea.innerHTML = textarea.innerHTML.replaceAll(/<div[^>]*><br><\/div>/g, '<br>').replaceAll(/<div[^>]*>/g, '').replaceAll('<br></div>', '<br>').replaceAll('</div>', '<br>');
 
             // Load content and path
             const path = document.querySelector('div[name="path"]').innerText;
             const content = textarea.innerText;
+            textarea.innerHTML = backup;
 
             const response = await fetch('/overwrite', {
                 method: 'POST',
@@ -283,7 +285,6 @@
                 feedback.textContent = 'Saved!';
                 feedback.style.display = 'inline';
                 setTimeout(() => (feedback.style.display = 'none'), 3000); // Hide after 3 seconds
-                loadFile(path);
             } else {
                 feedback.textContent = 'Error saving!';
                 feedback.style.color = 'red';
@@ -360,9 +361,7 @@
 
             for (var i = 0; i < elements.length; i++) {
                 const element = elements[i];
-                console.log(element);
                 if (element.tagName == 'DIV') {
-                    console.log(countHashtagsAtStart(element.textContent));
                     switch (countHashtagsAtStart(element.textContent)) {
                         case 1:
                             element.setAttribute('class', 'ob_h1');
