@@ -119,8 +119,32 @@
             font-weight: bold;
         }
 
+        .ob_code_start {
+            box-shadow: 0 1px 0 #7c1010 inset,
+                1px 0 0 #7c1010 inset,
+                -1px 0 0 #7c1010 inset;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background: #2d0606;
+            padding: 5px;
+        }
+
         .ob_code {
-            background: #530b0b;
+            box-shadow:
+                1px 0 0 #7c1010 inset,
+                -1px 0 0 #7c1010 inset;
+            background: #2d0606;
+            padding: 5px;
+        }
+
+        .ob_code_end {
+            padding: 5px;
+            background: #2d0606;
+            box-shadow: 0 -1px 0 #7c1010 inset,
+                1px 0 0 #7c1010 inset,
+                -1px 0 0 #7c1010 inset;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
         }
     </style>
 </head>
@@ -369,12 +393,23 @@
                 if (element.tagName == 'DIV') {
                     const isCodeWall = element.textContent.startsWith('```');
                     if (isCodeWall || codeBlock) {
-                        element.setAttribute('class', 'ob_code');
                         if (isCodeWall) {
+                            if (codeBlock) {
+                                element.setAttribute('class', 'ob_code_end');
+
+                            } else {
+                                element.setAttribute('class', 'ob_code_start');
+
+                            }
                             codeBlock = !codeBlock;
+                        } else {
+                            element.setAttribute('class', 'ob_code');
+
                         }
+                        element.setAttribute('spellcheck', 'false');
 
                     } else {
+                        element.setAttribute('spellcheck', 'true');
                         switch (countHashtagsAtStart(element.textContent)) {
                             case 1:
                                 element.setAttribute('class', 'ob_h1');
