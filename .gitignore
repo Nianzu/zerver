@@ -10,3 +10,5 @@ cert.pem
 *.swp
 *.swo
 secrets/**
+*/secured/**
+!website/secured/obsidian.html
