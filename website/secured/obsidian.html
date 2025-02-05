@@ -170,6 +170,7 @@
 
         let folder_path = "";
         let file_path = "";
+        let code_array = [];
 
         function countHashtagsAtStart(str) {
             let count = 0;
@@ -310,7 +311,7 @@
             const backup = textarea.innerHTML;
 
             var copyDiv = document.querySelector('.copy_border');
-            while(copyDiv){
+            while (copyDiv) {
                 copyDiv.remove();
                 copyDiv = document.querySelector('.copy_border');
             }
@@ -403,6 +404,11 @@
         });
 
         function applyFormatting(content) {
+
+            code_array = [];
+            var code_index = 0;
+            var code_item = "";
+
             var elements = content.children;
 
             var codeBlock = false;
@@ -418,6 +424,9 @@
                         if (isCodeWall) {
                             if (codeBlock) {
                                 element.setAttribute('class', 'ob_code_end');
+                                code_array[code_index] = code_item;
+                                code_index++;
+                                code_item = "";
 
                             } else {
                                 element.setAttribute('class', 'ob_code_start');
@@ -427,6 +436,14 @@
                                     div.setAttribute('contenteditable', 'false');
                                     div.textContent = 'Copy ';
                                     div.setAttribute('style', "float: right;");
+                                    div.setAttribute('code_index', code_index);
+                                    div.addEventListener("click", function () {
+                                        // Code to execute when the div is clicked
+                                        const index = event.target.getAttribute("code_index");
+                                        console.log(index);
+                                        console.log(code_array[index]);
+                                        navigator.clipboard.writeText(code_array[index]);
+                                    });
                                     svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                                     svg.setAttribute('class', 'copy_button');
                                     svg.setAttribute('viewBox', '0 0 448 512');
@@ -444,6 +461,7 @@
                             }
                             codeBlock = !codeBlock;
                         } else {
+                            code_item += element.innerText + "\n";
                             element.setAttribute('class', 'ob_code');
 
                         }
