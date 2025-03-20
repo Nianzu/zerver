@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100;400&family=Pathway+Extreme:wght@500&display=swap');
 
-* {
+/* * {
     margin: 0;
     padding: 0;
-    /* box-sizing: border-box; */
-}
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+     box-sizing: border-box; 
+} */
 
 body {
     font-family: Arial, sans-serif;
@@ -46,13 +48,29 @@ li {
 }
 
 .content {
-    margin-left: 20vw;
-    margin-right: 20vw;
+    /* margin-left: 20vw;
+    margin-right: 20vw; */
+    width: clamp(300px, 40vw, 800px);
+    /* width: 80vw; */
+    margin: 0 auto;
     padding: 40px;
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
     font-size: 18px;
 }
+
+
+/* When the sidebar is on top (e.g., on smaller devices) */
+@media screen and (max-width: 768px) {
+    .with-sidebar {
+        flex-direction: column;
+    }
+    .content {
+        /* Different width when the sidebar is on top */
+        width: clamp(280px, 80vw, 600px);
+    }
+}
+
 
 header h1 {
     font-size: 36px;

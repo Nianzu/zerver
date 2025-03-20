@@ -1,57 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Website</title>
-  <link rel="stylesheet" href="homestyles.css">
-  <link rel="icon" type="image/png" href="nico_simplified_transparent.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Website</title>
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="icon" type="image/png" href="nico_simplified_transparent.png">
 </head>
+
 <body>
-<!-- #include sidebar.html -->
+    <div class="with-sidebar">
+        <!-- #include sidebar.html -->
+        <div>
+            <div class="content">
+                <header>
+                    <h1>Personal Project - Navie</h1>
+                    <p>A little robot that navigates entirely on its own. Hence the name, Navie.</p>
+                </header>
 
-  <div class="content">
-    <header>
-      <h1>Personal Project - Navie</h1>
-      <p>A little robot that navigates entirely on its own. Hence the name, Navie.</p>
-    </header>
+                <section>
+                    <h2>About the project</h2>
+                    <p>Navie is a project that was designed to help improve my skills with C programming on raspberry
+                        pi, as
+                        well as gain a better understanding of SLAM and robot navigation in general. The project is
+                        currently considered blocked. I ran into a problem implementing the dead-reckoning where the
+                        encoder
+                        on the motors I purchased were not working to spec. I plan to pick this project back up once the
+                        BLDC project has been completed.</p>
 
-    <section>
-      <h2>About the project</h2>
-      <p>Navie is a project that was designed to help improve my skills with C programming on raspberry pi, as well as gain a better understanding of SLAM and robot navigation in general. The project is currently considered blocked. I ran into a problem implementing the dead-reckoning where the encoder on the motors I purchased were not working to spec. I plan to pick this project back up once the BLDC project has been completed.</p>
-      
-    </section>
+                </section>
 
-    <section>
-      <h2>Technologies</h2>
-      <p>C</p>
-      <p>Stereo Depth Processing (Block matching)</p>
-      <p>Localization (Particle Filter, 2D SLAM)</p>
-    </section>
+                <section>
+                    <h2>Technologies</h2>
+                    <p>C</p>
+                    <p>Stereo Depth Processing (Block matching)</p>
+                    <p>Localization (Particle Filter, 2D SLAM)</p>
+                </section>
 
-    <section>
-      <h2>Relevant Links</h2>
-      <p><a href="https://github.com/Nianzu/Navie" target="_blank">Github</a></p>
-    </section>
+                <section>
+                    <h2>Relevant Links</h2>
+                    <p><a href="https://github.com/Nianzu/Navie" target="_blank">Github</a></p>
+                </section>
 
-    <section>
-        <h2>Gallery</h2>
-	<!-- #include image.html localization.gif -->
-	<!-- #include image.html MCL_next.png -->
-	<!-- #include image.html starting_1.png -->
-	<!-- #include image.html processed1.png -->
-	<!-- #include image.html processed6.png -->
-	<!-- #include image.html sketch_side_1.png -->
-	<!-- #include image.html sketch_iso_1.png -->
-	<!-- #include image.html V1_Transparent.png -->
-	<!-- #include image.html V1_Iso.png -->
-	<!-- #include image.html V1_Stack.png -->
-	<!-- #include image.html Real_ISO.jpg -->
-      </section>
+                <section>
+                    <h2>Gallery</h2>
+                    <!-- #include image.html localization.gif -->
+                    <!-- #include image.html MCL_next.png -->
+                    <!-- #include image.html starting_1.png -->
+                    <!-- #include image.html processed1.png -->
+                    <!-- #include image.html processed6.png -->
+                    <!-- #include image.html sketch_side_1.png -->
+                    <!-- #include image.html sketch_iso_1.png -->
+                    <!-- #include image.html V1_Transparent.png -->
+                    <!-- #include image.html V1_Iso.png -->
+                    <!-- #include image.html V1_Stack.png -->
+                    <!-- #include image.html Real_ISO.jpg -->
+                </section>
 
-    <footer>
-      <p>&copy; 2025 Nico Zucca. No rights reserved.</p>
-    </footer>
-  </div>
+                <footer>
+                    <p>&copy; 2025 Nico Zucca. No rights reserved.</p>
+                </footer>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

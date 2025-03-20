@@ -1,69 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Website</title>
-  <link rel="stylesheet" href="homestyles.css">
-  <link rel="icon" type="image/png" href="nico_simplified_transparent.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Website</title>
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="icon" type="image/png" href="nico_simplified_transparent.png">
 </head>
+
 <body>
-<!-- #include sidebar.html -->
+    <div class="with-sidebar">
+        <!-- #include sidebar.html -->
+        <div>
+            <div class="content">
+                <header>
+                    <h1>Personal Project - Mandarin Navigator</h1>
+                    <p>A website to help you read mandarin e-books.</p>
+                </header>
 
-  <div class="content">
-    <header>
-      <h1>Personal Project - Mandarin Navigator</h1>
-      <p>A website to help you read mandarin e-books.</p>
-    </header>
-
-    <section>
-      <h2>Try it out!</h2>
-      <p>The CPP version is not currently under development, but you can view a compiled page from 三体问题 (Three Body Problem) and try it out!</p>
+                <section>
+                    <h2>Try it out!</h2>
+                    <p>The CPP version is not currently under development, but you can view a compiled page from 三体问题
+                        (Three
+                        Body Problem) and try it out!</p>
 
 
-      <p><a href="/part0007.html" target="_blank">Try it out!</a></p>
-         </section>
+                    <p><a href="/part0007.html" target="_blank">Try it out!</a></p>
+                </section>
 
-    <section>
-      <h2>About the project</h2>
-      <p>Over the past few years, I've been learning Chinese. As many language learners will tell you, learning a language is all about input. The more you can immerse yourself in the language, the quicker you can learn. And with Chinese specifically, it can be really hard to read words you don't understand. In German, if you don't know that "liebe" means "love", you at least know how to type it and pronounce it. In Chinese, if you don't know that "爱" means "love" you won't have any way to type or say the word. How will you look it up in a dictionary?</p>
-      <p>Mandarin Navigator aims to solve that problem for e-books. It completely transforms a standard e-book file into a webpage, that allows you to hover over words and see possible translations for those words, as well as how too say/type the word.</p>
-      
-    </section>
+                <section>
+                    <h2>About the project</h2>
+                    <p>Over the past few years, I've been learning Chinese. As many language learners will tell you,
+                        learning a language is all about input. The more you can immerse yourself in the language, the
+                        quicker you can learn. And with Chinese specifically, it can be really hard to read words you
+                        don't
+                        understand. In German, if you don't know that "liebe" means "love", you at least know how to
+                        type it
+                        and pronounce it. In Chinese, if you don't know that "爱" means "love" you won't have any way to
+                        type
+                        or say the word. How will you look it up in a dictionary?</p>
+                    <p>Mandarin Navigator aims to solve that problem for e-books. It completely transforms a standard
+                        e-book
+                        file into a webpage, that allows you to hover over words and see possible translations for those
+                        words, as well as how too say/type the word.</p>
 
-    <section>
-      <h2>Technologies</h2>
-      <p>C</p>
-      <p>C++</p>
-      <p>Webserver Technology</p>
-      <p>Javascrips</p>
-      <p>CSS</p>
-      <p>HTML</p>
-    </section>
+                </section>
 
-    <section>
-      <h2>Translation Methodology</h2>
-      <p>The current translation methodology is designed for speed and ease of implementation, at the cost of context sensitivity and accuracy. The system uses a dictionary of 121,366 common Chinese words in both traditional and simplified character sets, provided by <a href="https://cc-cedict.org/wiki/">CC-CEDICT</a>.</p>
-      <p>The algorithm works by breaking down each paragraph of the ebook into individual words. It starts by matching the longest word it can find to an entry in the dictionary. Then, it repeats this process for the remaining words on either side until the entire sentence has been translated or no further breakdown is possible.</p>
-      <p>This methodology offers several benefits, such as the ability to easily update the dictionary and ignore any non-Mandarin words or characters, such as punctuation. Additionally, by swapping the dictionary file, this methodology could theoretically be used to translate text in other logographic languages.</p>
-      <p>The primary assumption of this methodology is that longer words are more likely to be the intended meaning than shorter words.</p>
-      <p>Note: While this methodology is relatively simple, it may not always provide the most accurate or context-sensitive translations. However, it is a good starting point for further development and improvement.</p>
-    </section>
+                <section>
+                    <h2>Technologies</h2>
+                    <p>C</p>
+                    <p>C++</p>
+                    <p>Webserver Technology</p>
+                    <p>Javascrips</p>
+                    <p>CSS</p>
+                    <p>HTML</p>
+                </section>
 
-    <section>
-      <h2>Relevant Links</h2>
-      <p><a href="https://github.com/Nianzu/TranslationWebsite" target="_blank">Github</a></p>
-    </section>
+                <section>
+                    <h2>Translation Methodology</h2>
+                    <p>The current translation methodology is designed for speed and ease of implementation, at the cost
+                        of
+                        context sensitivity and accuracy. The system uses a dictionary of 121,366 common Chinese words
+                        in
+                        both traditional and simplified character sets, provided by <a
+                            href="https://cc-cedict.org/wiki/">CC-CEDICT</a>.</p>
+                    <p>The algorithm works by breaking down each paragraph of the ebook into individual words. It starts
+                        by
+                        matching the longest word it can find to an entry in the dictionary. Then, it repeats this
+                        process
+                        for the remaining words on either side until the entire sentence has been translated or no
+                        further
+                        breakdown is possible.</p>
+                    <p>This methodology offers several benefits, such as the ability to easily update the dictionary and
+                        ignore any non-Mandarin words or characters, such as punctuation. Additionally, by swapping the
+                        dictionary file, this methodology could theoretically be used to translate text in other
+                        logographic
+                        languages.</p>
+                    <p>The primary assumption of this methodology is that longer words are more likely to be the
+                        intended
+                        meaning than shorter words.</p>
+                    <p>Note: While this methodology is relatively simple, it may not always provide the most accurate or
+                        context-sensitive translations. However, it is a good starting point for further development and
+                        improvement.</p>
+                </section>
 
-    <section>
-        <h2>Gallery</h2>
-	<!-- #include image.html mandarin_navigator_1.png -->
-	<!-- #include image.html mandarin_navigator.gif -->
-      </section>
+                <section>
+                    <h2>Relevant Links</h2>
+                    <p><a href="https://github.com/Nianzu/TranslationWebsite" target="_blank">Github</a></p>
+                </section>
 
-    <footer>
-      <p>&copy; 2025 Nico Zucca. No rights reserved.</p>
-    </footer>
-  </div>
+                <section>
+                    <h2>Gallery</h2>
+                    <!-- #include image.html mandarin_navigator_1.png -->
+                    <!-- #include image.html mandarin_navigator.gif -->
+                </section>
+
+                <footer>
+                    <p>&copy; 2025 Nico Zucca. No rights reserved.</p>
+                </footer>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
