@@ -50,7 +50,7 @@ li {
 .content {
     /* margin-left: 20vw;
     margin-right: 20vw; */
-    width: clamp(300px, 40vw, 800px);
+    width: clamp(500px, 40vw, 800px);
     /* width: 80vw; */
     margin: 0 auto;
     padding: 40px;
@@ -61,13 +61,18 @@ li {
 
 
 /* When the sidebar is on top (e.g., on smaller devices) */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 700px) {
     .with-sidebar {
         flex-direction: column;
     }
+
     .content {
         /* Different width when the sidebar is on top */
         width: clamp(280px, 80vw, 600px);
+    }
+
+    .sidebar ul {
+        columns: 3;
     }
 }
 
@@ -243,6 +248,7 @@ button {
     padding: 20px;
     padding-left: 150px;
 }
+
 /* https://every-layout.dev/layouts/sidebar/ */
 .with-sidebar {
     display: flex;
