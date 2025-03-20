@@ -11,4 +11,5 @@ cert.pem
 *.swo
 secrets/**
 */secured/**
-!website/secured/obsidian.html
+!website/secured/rhyolite.html
+!website/secured/sidebar_ext.html

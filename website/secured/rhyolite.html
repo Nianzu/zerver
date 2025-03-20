@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nico's Nook</title>
+    <link rel="stylesheet" href="../homestyles.css">
+    <style>
+        .saved-feedback {
+            display: none;
+            color: green;
+            margin-left: 10px;
+        }
+
+        .file-tree-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: large;
+            font-size: large;
+            max-width: 200px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .file-tree-item span {
+            padding: 3px;
+        }
+
+        .file-tree-item:hover {
+            font-weight: bold;
+        }
+
+        .icon {
+            margin: 3px;
+        }
+
+        .file-content {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+
+        .path {
+            font-family: monospace;
+            font-size: larger;
+            padding: 5px;
+        }
+
+        [contenteditable] {
+            padding: 10px;
+            outline: 1px solid #7c1010;
+            font-family: monospace;
+            overflow-wrap: break-word;
+            border-radius: 10px;
+        }
+
+        .ob_h1 {
+            display: block;
+            font-size: 2em;
+            margin-top: 0.67em;
+            margin-bottom: 0.67em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h2 {
+            display: block;
+            font-size: 1.5em;
+            margin-top: 0.83em;
+            margin-bottom: 0.83em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h3 {
+            display: block;
+            font-size: 1.17em;
+            margin-top: 1em;
+            margin-bottom: 1em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h4 {
+            display: block;
+            font-size: 1em;
+            margin-top: 1.33em;
+            margin-bottom: 1.33em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h5 {
+            display: block;
+            font-size: .83em;
+            margin-top: 1.67em;
+            margin-bottom: 1.67em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_h6 {
+            display: block;
+            font-size: .67em;
+            margin-top: 2.33em;
+            margin-bottom: 2.33em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        .ob_code_start {
+            box-shadow: 0 1px 0 #7c1010 inset,
+                1px 0 0 #7c1010 inset,
+                -1px 0 0 #7c1010 inset;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background: #2d0606;
+            padding: 5px;
+            margin-top: 5px;
+        }
+
+        .ob_code {
+            box-shadow:
+                1px 0 0 #7c1010 inset,
+                -1px 0 0 #7c1010 inset;
+            background: #2d0606;
+            padding: 5px;
+        }
+
+        .ob_code_end {
+            padding: 5px;
+            background: #2d0606;
+            box-shadow: 0 -1px 0 #7c1010 inset,
+                1px 0 0 #7c1010 inset,
+                -1px 0 0 #7c1010 inset;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            margin-bottom: 5px;
+        }
+
+        .copy_border {
+            background-color: #7c1010;
+            border-radius: 5px;
+            display: inline-block;
+            padding: 6px;
+        }
+
+        .copy_button {
+            width: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- #include sidebar.html -->
+
+    <div class="file-tree" id="file-tree"></div>
+    <script>
+
+        let folder_path = "";
+        let file_path = "";
+        let code_array = [];
+
+        function countHashtagsAtStart(str) {
+            let count = 0;
+            for (let i = 0; i < str.length; i++) {
+                if (str[i] === '#') {
+                    count++;
+                } else {
+                    break; // Stop counting once a non-hashtag character is encountered
+                }
+            }
+            return count;
+        }
+
+        function compare(a, b) {
+            if (a.is_dir && !b.is_dir) { return -1; }
+            if (!a.is_dir && b.is_dir) { return 1; }
+            if (a.path.toLowerCase() < b.path.toLowerCase()) {
+                return -1;
+            }
+            if (a.path.toLowerCase() > b.path.toLowerCase()) {
+                return 1;
+            }
+            return 0;
+        }
+
+        function create_file_tree_item(file) {
+            const fileElement = document.createElement('div');
+            fileElement.setAttribute('class', 'file-tree-item');
+            const textElement = document.createElement('span');
+            textElement.textContent = file.name;
+            fileElement.appendChild(textElement);
+            fileElement.onclick = () => {
+                if (file.is_dir) {
+                    loadFolder(file.path); // Load child directory
+                } else {
+                    loadFile(file.path); // Load file for editing
+                }
+            };
+            if (file.is_dir) {
+                var img = document.createElement('IMG');
+                img.setAttribute('src', '../folder_w.png');
+                img.setAttribute('style', "width:20px;");
+                img.setAttribute('class', "icon");
+                fileElement.prepend(img);
+            }
+            return fileElement;
+        }
+
+        async function loadFolder(path = "") {
+
+            const response = await fetch('/files', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ path })
+            });
+
+            const files = await response.json();
+            const fileTree = document.getElementById('file-tree');
+            fileTree.innerHTML = ''; // Clear existing content
+
+
+            const tmp = document.createElement('div');
+            tmp.setAttribute('class', 'file-tree-item');
+            tmp.textContent = "..";
+            var img = document.createElement('IMG');
+            img.setAttribute('src', '../folder_w.png');
+            img.setAttribute('style', "width:20px;");
+            img.setAttribute('class', "icon");
+            tmp.prepend(img);
+            tmp.onclick = () => { loadFolder(path + "/.."); };
+            fileTree.appendChild(tmp);
+
+            folder_path = files[0].path;
+
+            // Hide the current folder
+            files.shift();
+            files.sort(compare);
+
+            // Hide the git folder
+            files.forEach(file => {
+                if (file.name != '.git') {
+                    fileTree.appendChild(create_file_tree_item(file));
+                }
+            });
+
+            const newBtn = document.createElement('button');
+            newBtn.setAttribute('type', 'button');
+            newBtn.setAttribute('onClick', 'createFile()');
+            newBtn.textContent = 'New File';
+            fileTree.appendChild(newBtn);
+        }
+
+        async function loadFile(path) {
+
+            file_path = path;
+
+            const response = await fetch('/edit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `path=${encodeURIComponent(path)}`
+            });
+
+            if (response.ok) {
+                const content = await response.text();
+                const textarea = document.querySelector('div[name="file-content"]');
+                textarea.innerHTML = '';
+
+                const lines = content.split('\n');
+                lines.forEach(line => {
+                    if (!line) {
+                        const br = document.createElement('br');
+                        const div = document.createElement('div');
+                        div.appendChild(br);
+                        textarea.appendChild(div);
+                    }
+                    else {
+                        const div = document.createElement('div');
+                        div.textContent = line;
+                        textarea.appendChild(div);
+                    }
+                })
+                textarea.removeChild(textarea.lastChild);
+
+                applyFormatting(textarea);
+
+                const pathTextarea = document.querySelector('div[name="path"]');
+                pathTextarea.innerText = path;
+            } else {
+                alert('Error loading file.');
+            }
+        }
+
+        async function saveFile(event) {
+            event.preventDefault();
+
+            // Remove divs to prevent double-entering
+            const textarea = document.querySelector('div[name="file-content"]');
+            const backup = textarea.innerHTML;
+
+            var copyDiv = document.querySelector('.copy_border');
+            while (copyDiv) {
+                copyDiv.remove();
+                copyDiv = document.querySelector('.copy_border');
+            }
+            textarea.innerHTML = textarea.innerHTML.replaceAll(/<div[^>]*><br><\/div>/g, '<br>').replaceAll(/<div[^>]*>/g, '').replaceAll('<br></div>', '<br>').replaceAll('</div>', '<br>');
+
+            // Load content and path
+            const path = document.querySelector('div[name="path"]').innerText;
+            const content = textarea.innerText;
+            textarea.innerHTML = backup;
+
+            const response = await fetch('/overwrite', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `path=${encodeURIComponent(path)}&content=${encodeURIComponent(content)}`
+            });
+
+            const feedback = document.getElementById('saved-feedback');
+            if (response.ok) {
+                feedback.textContent = 'Saved!';
+                feedback.style.display = 'inline';
+                setTimeout(() => (feedback.style.display = 'none'), 3000); // Hide after 3 seconds
+            } else {
+                feedback.textContent = 'Error saving!';
+                feedback.style.color = 'red';
+                feedback.style.display = 'inline';
+                setTimeout(() => (feedback.style.display = 'none'), 3000);
+            }
+        }
+
+        async function deleteFile() {
+            if (confirm("Are you sure you want to delete this?\n" + file_path)) {
+                var path = file_path;
+                const response = await fetch('/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path })
+                });
+                loadFolder(folder_path);
+            }
+        }
+
+        async function createFile() {
+            var name = prompt("Please enter a file name/path:", "");
+            if (name != "" && name != null) {
+                var path = folder_path + "/" + name;
+                const response = await fetch('/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path })
+                });
+                loadFolder(folder_path);
+            }
+        }
+
+        // Load the root folder on page load
+        loadFolder('/');
+    </script>
+
+    <div class="content">
+        <header>
+            <h1>Rhyolite</h1>
+        </header>
+
+
+        <form id="save-form">
+            <div class="path" name="path" readonly></div>
+            <div>
+                <button type="button" onclick="deleteFile()">Delete</button>
+            </div>
+            <div class="file-content" name="file-content" contenteditable="true"></div>
+            <button type="submit">Save</button>
+            <span id="saved-feedback" class="saved-feedback">Saved!</span>
+        </form>
+
+        <footer>
+            <p>&copy; 2025 Nico Zucca. No rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Attach save handler to the form
+        document.getElementById('save-form').addEventListener('submit', saveFile);
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && e.key === 's') {
+                // Prevent the Save dialog to open
+                e.preventDefault();
+
+                saveFile(e);
+            }
+        });
+
+        function applyFormatting(content) {
+
+            code_array = [];
+            var code_index = 0;
+            var code_item = "";
+
+            var elements = content.children;
+
+            var codeBlock = false;
+            var prevCodeBlock = false;
+            for (var i = 0; i < elements.length; i++) {
+                const element = elements[i];
+                if (element.tagName == 'DIV') {
+                    if (element.lastElementChild && element.lastElementChild.classList.contains('copy_border')) {
+                        element.removeChild(element.lastChild);
+                    }
+                    const isCodeWall = element.textContent.startsWith('```');
+                    if (isCodeWall || codeBlock) {
+                        if (isCodeWall) {
+                            if (codeBlock) {
+                                element.setAttribute('class', 'ob_code_end');
+                                code_array[code_index] = code_item;
+                                code_index++;
+                                code_item = "";
+
+                            } else {
+                                element.setAttribute('class', 'ob_code_start');
+                                if (!element.lastElementChild || !element.lastElementChild.classList.contains('copy_border')) {
+                                    div = document.createElement('div');
+                                    div.setAttribute('class', 'copy_border');
+                                    div.setAttribute('contenteditable', 'false');
+                                    div.textContent = 'Copy ';
+                                    div.setAttribute('style', "float: right;");
+                                    div.setAttribute('code_index', code_index);
+                                    div.addEventListener("click", function () {
+                                        // Code to execute when the div is clicked
+                                        const index = event.target.getAttribute("code_index");
+                                        console.log(index);
+                                        console.log(code_array[index]);
+                                        navigator.clipboard.writeText(code_array[index]);
+                                    });
+                                    element.appendChild(div);
+                                }
+
+
+                            }
+                            codeBlock = !codeBlock;
+                        } else {
+                            code_item += element.innerText + "\n";
+                            element.setAttribute('class', 'ob_code');
+
+                        }
+                        element.setAttribute('spellcheck', 'false');
+
+                    } else {
+                        element.setAttribute('spellcheck', 'true');
+                        switch (countHashtagsAtStart(element.textContent)) {
+                            case 1:
+                                element.setAttribute('class', 'ob_h1');
+                                break;
+                            case 2:
+                                element.setAttribute('class', 'ob_h2');
+                                break;
+                            case 3:
+                                element.setAttribute('class', 'ob_h3');
+                                break;
+                            case 4:
+                                element.setAttribute('class', 'ob_h4');
+                                break;
+                            case 5:
+                                element.setAttribute('class', 'ob_h5');
+                                break;
+                            case 6:
+                                element.setAttribute('class', 'ob_h6');
+                                break;
+                            default:
+                                element.setAttribute('class', '');
+
+                                break;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        document.querySelector('div[name="file-content"]').addEventListener('input', function (e) {
+            applyFormatting(e.target);
+        });
+    </script>
+</body>
+
+</html>
