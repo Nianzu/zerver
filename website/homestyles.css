@@ -1,13 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100;400&family=Pathway+Extreme:wght@500&display=swap');
 
-/* * {
-    margin: 0;
-    padding: 0;
-    -moz-box-sizing: border-box; 
-    -webkit-box-sizing: border-box; 
-     box-sizing: border-box; 
-} */
-
 body {
     font-family: Arial, sans-serif;
     color: #fff;
@@ -23,11 +15,6 @@ li {
 
 .sidebar {
     background-color: #7c1010;
-    /* width: 6.5vw; */
-    /* height: 100vh; */
-    /* position: fixed; */
-    /* top: 0; */
-    /* left: 0; */
     font-family: 'Pathway Extreme', sans-serif;
     font-weight: 500;
 }
@@ -48,10 +35,7 @@ li {
 }
 
 .content {
-    /* margin-left: 20vw;
-    margin-right: 20vw; */
     width: clamp(500px, 40vw, 800px);
-    /* width: 80vw; */
     margin: 0 auto;
     padding: 40px;
     font-family: 'Barlow', sans-serif;
