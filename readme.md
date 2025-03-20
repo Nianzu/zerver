@@ -23,7 +23,7 @@ This is done using include statements as above to load specified files.
 
 We also have the ability to provide arguments to the SSI, such as below. Here, the image name `processed6.png` is substituded in place of all `$1` tags in the SSI target file. This allows a widget-like structure for HTML/CSS/JS development.
 ```
-<!-- #include image.html processed6.png -->
+<!-- #include image.html images/processed6.png -->
 ```
 
 ```
