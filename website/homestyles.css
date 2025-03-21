@@ -24,17 +24,21 @@ li {
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar li {
     margin-bottom: 15px;
     margin-left: 0px;
+    display: flex;
 }
 
 .sidebar li a {
     color: #ffbfbf;
     text-decoration: none;
     font-size: medium;
+    flex-grow: 1;
 }
 .sidebar h3 {
     color: #fff;
@@ -64,7 +68,11 @@ li {
     }
 
     .sidebar ul {
-        columns: 3;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .sidebar li a {
+        padding-right: 20px;
     }
 }
 
