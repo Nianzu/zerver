@@ -30,8 +30,14 @@ li {
 }
 
 .sidebar li a {
+    color: #ffecec;
+    text-decoration: none;
+    font-size: medium;
+}
+.sidebar h3 {
     color: #fff;
     text-decoration: none;
+    padding-left: 10px;
 }
 
 .content {
