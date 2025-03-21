@@ -21,7 +21,9 @@ li {
 
 .sidebar ul {
     list-style-type: none;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
 }
 
 .sidebar li {
@@ -30,7 +32,7 @@ li {
 }
 
 .sidebar li a {
-    color: #ffecec;
+    color: #ffbfbf;
     text-decoration: none;
     font-size: medium;
 }
