@@ -148,6 +148,13 @@ img:not(.icon):hover {
 
 }
 
+.base_img_large img {
+    width: 100%;
+    max-width: 800px;
+    display: block;
+    margin: auto;
+}
+
 /* https://stackoverflow.com/questions/74418237/create-simple-css-image-gallery */
 .lightbox {
     position: fixed;
