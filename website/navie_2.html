@@ -18,12 +18,34 @@
                     <h1>Personal Project - Navie 2</h1>
                     <p>A little robot that navigates entirely on its own. Hence the name, Navie.</p>
                 </header>
-                
-                    <!-- #include image_large.html images/Navie2_3.JPG -->
+
+                <!-- #include image_large.html images/Navie2_3.JPG -->
 
                 <section>
                     <h2>About the project</h2>
-                    <p></p>
+                    <p>Navie 2 is the successor to Navie 1, which ultimately failed at its goal of being a room mapping
+                        robot. This robot improves on the design in numerous ways:</p>
+                    <p>Battery: Navie 1 had a large 2s battery strapped on top, connected with a simple XT60 connector.
+                        This was unstable, unsightly, and required a specialized charger. Navie 2 integrates an 18650
+                        into the core chassis (more on this later), and includes built-in USB-C charging!</p>
+                    <p>Modular design: As part of this design, I wanted to be able to create different mission payloads
+                        that could easily be swapped. So Navie 2's lower chassis is a completely self-contained and
+                        functional robot. It includes battery, motors, control electronics, WIFI and bluetooth
+                        connectivity, and a magnetic expansion port on top which shares 5v power and an I2C bus. This
+                        allows it to interact as master (for expansions such as a forklift) or slave (for expansions
+                        such as the navigation pack).</p>
+                    <p>Sensors: Part of the issue with Navie 1 was a over-scoping of the project. Looking back, custom
+                        stereo cameras with a custom SLAM backend might have been a bit much to chew off. Navie 2 has
+                        the potential to explore the same technologies with its modular expansion design, but to start
+                        with a 2D Lidar based approach is going to be much easier to start with.</p>
+                    <p>Movement: A desired improvement in this design was for the vehicle to be off-road capable. To
+                        acomplish this, I used a tracked system rather than the 2 wheel and drag system employed in the
+                        previous design. I also upgraded the motors to higher quality N20 motors, increasing top speed
+                        and torque.</p>
+                    <p>Control Electronics: The last design used the L298N (Cheap, reliable, and most importantly
+                        cheap), which suffered from low efficiency and a massive space claim. This design uses the much
+                        more efficient (and MUCH smaller) DRV8833, which drastically decreases the space claim of the
+                        electrical systems, allowing the entire core chassis to fit in a 12mm sliver.</p>
 
                 </section>
 
