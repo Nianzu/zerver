@@ -13,7 +13,7 @@ pub struct HttpRequest {
 pub fn http_request_from_string(s: &str) -> HttpRequest {
     let cleaned = s.replace("\0", "");
     let vec: Vec<&str> = s.split(' ').collect();
-    
+
     let request_type_local: String = {
         if vec.len() < 1 || vec[0].len() < 1 {
             "UNKNOWN".to_owned()
@@ -72,12 +72,20 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
 
 fn get_pwd(s: &str) -> Option<String> {
     if let Some(password_section) = s.split("psw=").nth(1) {
-        Some(password_section.lines().next().unwrap_or("").replace("\n", "").replace("\r", "").trim().to_owned())
+        Some(
+            password_section
+                .lines()
+                .next()
+                .unwrap_or("")
+                .replace("\n", "")
+                .replace("\r", "")
+                .trim()
+                .to_owned(),
+        )
     } else {
         None
     }
 }
-
 
 fn get_cookie(s: &str) -> Option<String> {
     if s.contains("Cookie: ") {

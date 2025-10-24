@@ -22,9 +22,18 @@ use tokio_rustls::TlsAcceptor;
 mod authentication;
 mod file_handler;
 mod request_handler;
+use serde::{Deserialize, Serialize};
 use std::io::Write;
 use tokio::sync::Mutex;
 use walkdir::WalkDir;
+
+#[derive(Serialize)]
+struct insurance_return {
+    A_total_cost: f32,
+    A_personal_cost: f32,
+    A_insurance_cost: f32,
+    A_company_cost: f32,
+}
 
 fn load_tls_config() -> Arc<ServerConfig> {
     // Open the key and cert files
@@ -289,7 +298,7 @@ async fn handle_create_request(request: &request_handler::HttpRequest) -> (Strin
         std::fs::create_dir_all(prefix).unwrap();
 
         let mut f = std::fs::OpenOptions::new()
-        .create_new(true)
+            .create_new(true)
             .write(true)
             .open(&full_path.to_owned())
             .expect("issue creating file object");
@@ -331,8 +340,8 @@ async fn handle_delete_request(request: &request_handler::HttpRequest) -> (Strin
         let prefix = path_path.parent().unwrap();
         std::fs::create_dir_all(prefix).unwrap();
 
-        let mut f = std::fs::remove_file(&full_path.to_owned())
-            .expect("issue removing file object");
+        let mut f =
+            std::fs::remove_file(&full_path.to_owned()).expect("issue removing file object");
 
         let content = "".to_owned();
         (
@@ -346,6 +355,130 @@ async fn handle_delete_request(request: &request_handler::HttpRequest) -> (Strin
         )
     }
 }
+
+async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (String, Vec<u8>) {
+    if request.request_type == "POST" {
+        let body = request.body.clone();
+        let params: serde_json::Value = serde_json::from_slice(body.as_bytes()).unwrap();
+        let pretty_json = serde_json::to_string_pretty(&params).expect("issue with json");
+        println!("JSON: {}", pretty_json);
+        println!("a_decuc {}", params["A_deductable_single"]);
+        let mut single_deductable = params["A_deductable_single"]
+            .as_str()
+            .unwrap()
+            .parse::<f32>()
+            .unwrap();
+        let mut total_cost = 0.0;
+        let mut personal_cost = 0.0;
+        let mut insurance_cost = 0.0;
+        let mut company_cost = 0.0;
+
+        let max_reimbursement = params["reimbursement"]
+            .as_str()
+            .unwrap()
+            .parse::<f32>()
+            .unwrap();
+
+        for plan in ["A"] {
+            let premium = params[plan.to_owned() + "_premium"]
+                .as_str()
+                .unwrap()
+                .parse::<f32>()
+                .unwrap();
+            if premium > max_reimbursement {
+                company_cost = max_reimbursement * 12.0;
+                personal_cost = premium * 12.0 - company_cost;
+            } else {
+                company_cost = premium * 12.0;
+            }
+
+            insurance_cost = -premium * 12.0;
+
+            for interaction in ["pc"] {
+                for _ in 0..params[interaction.to_owned() + "_number"]
+                    .as_str()
+                    .unwrap()
+                    .parse::<i32>()
+                    .unwrap()
+                {
+                    let mut interaction_cost = params[interaction.to_owned() + "_cost"]
+                        .as_str()
+                        .unwrap()
+                        .parse::<f32>()
+                        .unwrap();
+                    println!("RUNNING INTERACTION {}", interaction);
+                    total_cost += interaction_cost;
+                    let interaction_string = plan.to_owned() + "_" + interaction;
+                    if let Some(_) = params.get(interaction_string.clone() + "_deductable") {
+                        if interaction_cost > single_deductable {
+                            interaction_cost -= single_deductable;
+                            personal_cost += single_deductable;
+                            single_deductable = 0.0;
+                            let interaction_personal_cost = interaction_cost
+                                * (params[interaction_string.clone() + "_copay"]
+                                    .as_str()
+                                    .unwrap()
+                                    .parse::<f32>()
+                                    .unwrap()
+                                    / 100.0)
+                                + params[interaction_string.clone() + "_fixed"]
+                                    .as_str()
+                                    .unwrap()
+                                    .parse::<f32>()
+                                    .unwrap();
+
+                            personal_cost += interaction_personal_cost;
+                            insurance_cost += interaction_cost - interaction_personal_cost;
+                        } else {
+                            single_deductable -= interaction_cost;
+                            personal_cost += interaction_cost;
+                        }
+                    } else {
+                        let interaction_personal_cost = interaction_cost
+                            * (params[interaction_string.clone() + "_copay"]
+                                .as_str()
+                                .unwrap()
+                                .parse::<f32>()
+                                .unwrap()
+                                / 100.0)
+                            + params[interaction_string.clone() + "_fixed"]
+                                .as_str()
+                                .unwrap()
+                                .parse::<f32>()
+                                .unwrap();
+
+                        personal_cost += interaction_personal_cost;
+                        insurance_cost += interaction_cost - interaction_personal_cost;
+                    }
+                    println!("Total cost: {}", total_cost);
+                    println!("Personal cost: {}", personal_cost);
+                    println!("Insurance cost: {}", insurance_cost);
+                }
+            }
+
+            println!("Total cost: {}", total_cost);
+            println!("Personal cost: {}", personal_cost);
+            println!("Insurance cost: {}", insurance_cost);
+        }
+        let ret = insurance_return {
+            A_total_cost: total_cost,
+            A_personal_cost: personal_cost,
+            A_insurance_cost: insurance_cost,
+            A_company_cost: company_cost,
+        };
+        let ret_string = serde_json::to_string(&ret).unwrap();
+        (
+            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n".to_string(),
+            ret_string.into_bytes().to_vec(),
+        )
+    } else {
+        (
+            "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            b"Only POST method is allowed".to_vec(),
+        )
+    }
+}
+
 fn get_content_length(request: &str) -> Option<usize> {
     for line in request.lines() {
         if line.to_lowercase().starts_with("content-length:") {
@@ -476,8 +609,18 @@ async fn handle_connection(
             stream.write_all(&response.1).await.unwrap();
             return;
         } else if http_request.filename == "/home/zico/zerver/website/delete" {
-            println!("create");
+            println!("delete");
             let response = handle_delete_request(&http_request).await;
+            stream.write_all(response.0.as_bytes()).await.unwrap();
+            stream.write_all(&response.1).await.unwrap();
+            return;
+        }
+    }
+
+    if http_request.request_type == "POST" {
+        if http_request.filename == "/home/zico/zerver/website/api/calculate_insurance" {
+            println!("calc insurance");
+            let response = handle_insurance_request(&http_request).await;
             stream.write_all(response.0.as_bytes()).await.unwrap();
             stream.write_all(&response.1).await.unwrap();
             return;

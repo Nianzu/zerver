@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance calculator</title>
+    <link rel="stylesheet" href="homestyles.css">
+    <link rel="icon" type="image/png" href="images/nico_simplified_transparent.png">
+</head>
+
+<body>
+    <div class="with-sidebar">
+        <!-- #include sidebar.html -->
+        <div>
+            <div class="content">
+                <header>
+                    <h1>Personal Project - Insurance Calculator</h1>
+                </header>
+
+                <section>
+                    <h2>Calculator</h2>
+		    <form id="insurance-form">
+			    <label>Company premium reimbursement /mo: <input type="number" name="reimbursement" value="1000"/></label>
+			    <details>
+				   <summary>Number of each kind of medical interaction (/yr)</summary>
+				   <label>Primary Care visits: <input type="number" name="pc_number" value="3"></label>
+			    </details>
+			    <details>
+				   <summary>Cost of each kind of medical interaction</summary>
+				   <label>Primary Care visit cost: <input type="number" name="pc_cost" value="200"/></label>
+			    </details>
+			    <details>
+				   <summary>Plan details</summary>
+				   <label>Premium cost /mo: <input type="number" name="A_premium" value="1200"/></label>
+				   <label>Single deductable: <input type="number" name="A_deductable_single" value="1000"/></label>
+				   <fieldset>
+					   <legend>Primary care</legend>
+					   <label>Fixed cost: <input type="number" name="A_pc_fixed" value="50"/></label>
+					   <label>Copay: <input type="number" name="A_pc_copay" value="20"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="A_pc_deductable"/></label>
+				   </fieldset>
+			    </details>
+			    <button type="submit">Calculate</button>
+		    </form>
+		<label>Total cost: <p id="A_total_cost"></p></label>
+		<label>Personal cost: <p id="A_personal_cost"></p></label>
+		<label>Insurance cost: <p id="A_insurance_cost"></p></label>
+		<label>Company cost: <p id="A_company_cost"></p></label>
+
+                </section>
+
+                <section>
+                    <h2>About the project</h2>
+                </section>
+
+                <section>
+                    <h2>Methodology</h2>
+                    <p></p>
+
+                </section>
+
+                <section>
+                    <h2>Technologies</h2>
+                    <div class="skills-cards">
+                        <div class="card">Rust</div>
+                        <div class="card">Neural network</div>
+                        <div class="card">Chess engine</div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Relevant Links</h2>
+                    <p><a href="https://github.com/Nianzu/Scylla" target="_blank">Github</a></p>
+                </section>
+
+
+                <footer>
+                    <p>&copy; 2025 Nico Zucca. No rights reserved.</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="insurance.js"></script>
