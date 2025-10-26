@@ -394,7 +394,7 @@ async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (St
 
             insurance_cost = -premium * 12.0;
 
-            for interaction in ["pc"] {
+            for interaction in ["pc","s","ip","op","uc","er","im"] {
                 for _ in 0..params[interaction.to_owned() + "_number"]
                     .as_str()
                     .unwrap()

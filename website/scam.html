@@ -23,29 +23,88 @@
 			    <label>Company premium reimbursement /mo: <input type="number" name="reimbursement" value="1000"/></label>
 			    <details>
 				   <summary>Number of each kind of medical interaction (/yr)</summary>
-				   <label>Primary Care visits: <input type="number" name="pc_number" value="3"></label>
+				   <div style="margin-left:20px;">
+				   <label>Primary Care visits: <input type="number" name="pc_number" value="2"></label><br>
+				   <label>Specialist visits: <input type="number" name="s_number" value="1"></label><br>
+				   <label>Inpatient events: <input type="number" name="ip_number" value="0"/></label><br>
+				   <label>Outpatient events: <input type="number" name="op_number" value="0"/></label><br>
+				   <label>Urgent care visits: <input type="number" name="uc_number" value="1"/></label><br>
+				   <label>Emergency room visits: <input type="number" name="er_number" value="0"/></label><br>
+				   <label>Imaging events: <input type="number" name="im_number" value="0"/></label><br>
+				   </div>
 			    </details>
 			    <details>
 				   <summary>Cost of each kind of medical interaction</summary>
-				   <label>Primary Care visit cost: <input type="number" name="pc_cost" value="200"/></label>
+				   <div style="margin-left:20px;">
+				   <label>Primary Care visit cost: $<input type="number" name="pc_cost" value="200"/></label><br>
+				   <label>Specialist visit cost: $<input type="number" name="s_cost" value="400"/></label><br>
+				   <label>Inpatient event cost: $<input type="number" name="ip_cost" value="10000"/></label><br>
+				   <label>Outpatient event cost: $<input type="number" name="op_cost" value="2000"/></label><br>
+				   <label>Urgent care visit cost: $<input type="number" name="uc_cost" value="200"/></label><br>
+				   <label>Emergency room visit cost: $<input type="number" name="er_cost" value="2000"/></label><br>
+				   <label>Imaging event cost: $<input type="number" name="im_cost" value="1000"/></label><br>
+				   </div>
 			    </details>
 			    <details>
-				   <summary>Plan details</summary>
-				   <label>Premium cost /mo: <input type="number" name="A_premium" value="1200"/></label>
-				   <label>Single deductable: <input type="number" name="A_deductable_single" value="1000"/></label>
+				   <summary>Plan A details</summary>
+				   <div style="margin-left:20px;">
+				   <label>Plan name: <input type="text" name="A_name" value="DXE5/N39S"/></label><br>
+				   <label>Premium cost /mo: $<input type="number" name="A_premium" value="1100"/></label><br>
+				   <label>Single deductable: $<input type="number" name="A_deductable_single" value="2500"/></label><br>
+				   <label>Single out of pocket max: $<input type="number" name="A_single_oop_max" value="5200"/></label><br>
+				   <label>Family out of pocket max: $<input type="number" name="A_family_oop_max" value="10500"/></label><br>
 				   <fieldset>
 					   <legend>Primary care</legend>
-					   <label>Fixed cost: <input type="number" name="A_pc_fixed" value="50"/></label>
-					   <label>Copay: <input type="number" name="A_pc_copay" value="20"/><span>%</span></label>
+					   <label>Fixed cost: $<input type="number" name="A_pc_fixed" value="25"/></label>
+					   <label>Copay: <input type="number" name="A_pc_copay" value="0"/><span>%</span></label>
 					   <label>After deductable: <input type="checkbox" name="A_pc_deductable"/></label>
 				   </fieldset>
+				   <fieldset>
+					   <legend>Specialist</legend>
+					   <label>Fixed cost: $<input type="number" name="A_s_fixed" value="50"/></label>
+					   <label>Copay: <input type="number" name="A_s_copay" value="0"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="A_s_deductable"/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Inpatient care</legend>
+					   <label>Fixed cost: $<input type="number" name="A_ip_fixed" value="0"/></label>
+					   <label>Copay: <input type="number" name="A_ip_copay" value="20"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="A_ip_deductable" checked/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Outpatient care</legend>
+					   <label>Fixed cost: $<input type="number" name="A_op_fixed" value="0"/></label>
+					   <label>Copay: <input type="number" name="A_op_copay" value="20"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="A_op_deductable" checked/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Urgent care</legend>
+					   <label>Fixed cost: $<input type="number" name="A_uc_fixed" value="50"/></label>
+					   <label>Copay: <input type="number" name="A_uc_copay" value="0"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="A_uc_deductable"/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Emergency room</legend>
+					   <label>Fixed cost: $<input type="number" name="A_er_fixed" value="0"/></label>
+					   <label>Copay: <input type="number" name="A_er_copay" value="20"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="A_er_deductable" checked/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Imaging</legend>
+					   <label>Fixed cost: $<input type="number" name="A_im_fixed" value="0"/></label>
+					   <label>Copay: <input type="number" name="A_im_copay" value="20"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="A_im_deductable" checked/></label>
+				   </fieldset>
+				   </div>
 			    </details>
+			    <br>
 			    <button type="submit">Calculate</button>
+			    <br>
 		    </form>
-		<label>Total cost: <p id="A_total_cost"></p></label>
-		<label>Personal cost: <p id="A_personal_cost"></p></label>
-		<label>Insurance cost: <p id="A_insurance_cost"></p></label>
-		<label>Company cost: <p id="A_company_cost"></p></label>
+		<label>Total cost: $<p id="A_total_cost"></p></label>
+		<label>Personal cost: $<p id="A_personal_cost"></p></label>
+		<label>Insurance cost: $<p id="A_insurance_cost"></p></label>
+		<label>Company cost: $<p id="A_company_cost"></p></label>
 
                 </section>
 
