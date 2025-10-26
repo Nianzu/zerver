@@ -11,7 +11,7 @@ document.getElementById("insurance-form").addEventListener("submit", async (e) =
 	  const result = await res.json();
 	  document.getElementById("A_total_cost").textContent = `$${result.A_total_cost}`;
 	  document.getElementById("A_personal_cost").textContent = `$${result.A_personal_cost}`;
-	  document.getElementById("A_insurance_cost").textContent = `$${result.A_insurance_cost}`;
-	  document.getElementById("A_company_cost").textContent = `$${result.A_company_cost}`;
+	  document.getElementById("B_personal_cost").textContent = `$${result.B_personal_cost}`;
+
 	  updateChart(result.breakdown);
 });

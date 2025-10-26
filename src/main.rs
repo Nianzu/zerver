@@ -31,8 +31,7 @@ use walkdir::WalkDir;
 struct insurance_return {
     A_total_cost: f32,
     A_personal_cost: f32,
-    A_insurance_cost: f32,
-    A_company_cost: f32,
+    B_personal_cost: f32,
 }
 
 fn load_tls_config() -> Arc<ServerConfig> {
@@ -363,13 +362,17 @@ async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (St
         let pretty_json = serde_json::to_string_pretty(&params).expect("issue with json");
         println!("JSON: {}", pretty_json);
         println!("a_decuc {}", params["A_deductable_single"]);
-        let mut single_deductable = params["A_deductable_single"]
+        let mut B_personal_cost = 0.0;
+        let mut A_personal_cost = 0.0;
+        let mut global_total_cost = 0.0;
+        for plan in ["A","B"] {
+        let mut single_deductable = params[plan.to_owned() + "_deductable_single"]
             .as_str()
             .unwrap()
             .parse::<f32>()
             .unwrap();
-        let mut total_cost = 0.0;
         let mut personal_cost = 0.0;
+        let mut total_cost = 0.0;
         let mut insurance_cost = 0.0;
         let mut company_cost = 0.0;
 
@@ -379,7 +382,13 @@ async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (St
             .parse::<f32>()
             .unwrap();
 
-        for plan in ["A"] {
+
+            let mut live_oop_max = params[plan.to_owned() + "_single_oop_max"]
+                .as_str()
+                .unwrap()
+                .parse::<f32>()
+                .unwrap();
+
             let premium = params[plan.to_owned() + "_premium"]
                 .as_str()
                 .unwrap()
@@ -394,7 +403,7 @@ async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (St
 
             insurance_cost = -premium * 12.0;
 
-            for interaction in ["pc","s","ip","op","uc","er","im"] {
+            for interaction in ["pc", "s", "ip", "op", "uc", "er", "im"] {
                 for _ in 0..params[interaction.to_owned() + "_number"]
                     .as_str()
                     .unwrap()
@@ -409,12 +418,13 @@ async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (St
                     println!("RUNNING INTERACTION {}", interaction);
                     total_cost += interaction_cost;
                     let interaction_string = plan.to_owned() + "_" + interaction;
+                    let mut interaction_personal_cost = 0.0;
                     if let Some(_) = params.get(interaction_string.clone() + "_deductable") {
                         if interaction_cost > single_deductable {
                             interaction_cost -= single_deductable;
-                            personal_cost += single_deductable;
+                            interaction_personal_cost += single_deductable;
                             single_deductable = 0.0;
-                            let interaction_personal_cost = interaction_cost
+                            interaction_personal_cost += interaction_cost
                                 * (params[interaction_string.clone() + "_copay"]
                                     .as_str()
                                     .unwrap()
@@ -426,12 +436,9 @@ async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (St
                                     .unwrap()
                                     .parse::<f32>()
                                     .unwrap();
-
-                            personal_cost += interaction_personal_cost;
-                            insurance_cost += interaction_cost - interaction_personal_cost;
                         } else {
                             single_deductable -= interaction_cost;
-                            personal_cost += interaction_cost;
+                            interaction_personal_cost += interaction_cost;
                         }
                     } else {
                         let interaction_personal_cost = interaction_cost
@@ -446,9 +453,15 @@ async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (St
                                 .unwrap()
                                 .parse::<f32>()
                                 .unwrap();
-
+                    }
+                    if interaction_personal_cost > live_oop_max {
+                        personal_cost += live_oop_max;
+                        insurance_cost += interaction_cost - live_oop_max;
+                        live_oop_max = 0.0;
+                    } else {
                         personal_cost += interaction_personal_cost;
                         insurance_cost += interaction_cost - interaction_personal_cost;
+                        live_oop_max -= interaction_personal_cost;
                     }
                     println!("Total cost: {}", total_cost);
                     println!("Personal cost: {}", personal_cost);
@@ -459,12 +472,17 @@ async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (St
             println!("Total cost: {}", total_cost);
             println!("Personal cost: {}", personal_cost);
             println!("Insurance cost: {}", insurance_cost);
+            match plan {
+                "A" => A_personal_cost = personal_cost,
+                "B" => B_personal_cost = personal_cost,
+                _ => (),
+            }
+            global_total_cost = total_cost;
         }
         let ret = insurance_return {
-            A_total_cost: total_cost,
-            A_personal_cost: personal_cost,
-            A_insurance_cost: insurance_cost,
-            A_company_cost: company_cost,
+            A_total_cost: global_total_cost,
+            A_personal_cost: A_personal_cost,
+            B_personal_cost: B_personal_cost,
         };
         let ret_string = serde_json::to_string(&ret).unwrap();
         (

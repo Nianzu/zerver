@@ -97,14 +97,66 @@
 				   </fieldset>
 				   </div>
 			    </details>
+			    <details>
+				   <summary>Plan B details</summary>
+				   <div style="margin-left:20px;">
+				   <label>Plan name: <input type="text" name="B_name" value="DXF5/K16S"/></label><br>
+				   <label>Premium cost /mo: $<input type="number" name="B_premium" value="1270"/></label><br>
+				   <label>Single deductable: $<input type="number" name="B_deductable_single" value="500"/></label><br>
+				   <label>Single out of pocket max: $<input type="number" name="B_single_oop_max" value="4150"/></label><br>
+				   <label>Family out of pocket max: $<input type="number" name="B_family_oop_max" value="8300"/></label><br>
+				   <fieldset>
+					   <legend>Primary care</legend>
+					   <label>Fixed cost: $<input type="number" name="B_pc_fixed" value="20"/></label>
+					   <label>Copay: <input type="number" name="B_pc_copay" value="0"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="B_pc_deductable"/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Specialist</legend>
+					   <label>Fixed cost: $<input type="number" name="B_s_fixed" value="40"/></label>
+					   <label>Copay: <input type="number" name="B_s_copay" value="0"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="B_s_deductable"/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Inpatient care</legend>
+					   <label>Fixed cost: $<input type="number" name="B_ip_fixed" value="0"/></label>
+					   <label>Copay: <input type="number" name="B_ip_copay" value="20"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="B_ip_deductable" checked/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Outpatient care</legend>
+					   <label>Fixed cost: $<input type="number" name="B_op_fixed" value="0"/></label>
+					   <label>Copay: <input type="number" name="B_op_copay" value="20"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="B_op_deductable" checked/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Urgent care</legend>
+					   <label>Fixed cost: $<input type="number" name="B_uc_fixed" value="20"/></label>
+					   <label>Copay: <input type="number" name="B_uc_copay" value="0"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="B_uc_deductable"/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Emergency room</legend>
+					   <label>Fixed cost: $<input type="number" name="B_er_fixed" value="0"/></label>
+					   <label>Copay: <input type="number" name="B_er_copay" value="20"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="B_er_deductable" checked/></label>
+				   </fieldset>
+				   <fieldset>
+					   <legend>Imaging</legend>
+					   <label>Fixed cost: $<input type="number" name="B_im_fixed" value="0"/></label>
+					   <label>Copay: <input type="number" name="B_im_copay" value="20"/><span>%</span></label>
+					   <label>After deductable: <input type="checkbox" name="B_im_deductable" checked/></label>
+				   </fieldset>
+				   </div>
+			    </details>
+	
 			    <br>
 			    <button type="submit">Calculate</button>
 			    <br>
 		    </form>
-		<label>Total cost: $<p id="A_total_cost"></p></label>
-		<label>Personal cost: $<p id="A_personal_cost"></p></label>
-		<label>Insurance cost: $<p id="A_insurance_cost"></p></label>
-		<label>Company cost: $<p id="A_company_cost"></p></label>
+		    <label>Total cost: <label id="A_total_cost"></label></label><br>
+		<label>Plan A personal cost: <label id="A_personal_cost"></label></label><br>
+		<label>Plan B personal cost: <label id="B_personal_cost"></label></label><br>
 
                 </section>
 
