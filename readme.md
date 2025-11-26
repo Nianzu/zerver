@@ -54,6 +54,8 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 3
 openssl rsa -in key.pem -out key_rsa.pem
 ```
 
+## Audiobook add images to m4a
+`for i in *.m4a; do AtomicParsley "$i" --artwork cover.jpg --overWrite; done;`
 ### Compile
 
 ## To-Do
