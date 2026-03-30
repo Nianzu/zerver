@@ -494,6 +494,22 @@
                 document.querySelector('div[name="file-content"]').addEventListener('input', function (e) {
                     applyFormatting(e.target);
                 });
+
+		// Ensure that paste doesn't try to paste formatted text
+		document.querySelector('div[name="file-content"]').addEventListener('paste', function (e) {
+		    e.preventDefault();
+		    const text = e.clipboardData.getData('text/plain');
+		    document.execCommand('insertText',false, text);
+
+		});
+
+		// Ensure that drag and drop doesn't put unexpected file content here
+                document.querySelector('div[name="file-content"]').addEventListener('drop', function (e) {
+		    e.preventDefault();
+		    const text = e.dataTransfer.getData('text/plain');
+		    document.execCommand('insertText',false, text);
+
+		});
             </script>
         </div>
     </div>
