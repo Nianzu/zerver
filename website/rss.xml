@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0"
-     xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
   <channel>
     <title>How Light Returned to the North Pole</title>
     <link>https://sites.google.com/view/lilydrawsandwrites/home</link>
@@ -9,138 +8,372 @@
     <itunes:author>Lily</itunes:author>
     <itunes:owner><itunes:email>lilydrawsandwrites@gmail.com</itunes:email><itunes:name>Lily</itunes:name></itunes:owner>
     <itunes:summary>Is corporate greed feeling like too much to bear? The elves of the North Pole have been there! Follow Kay and her coven as they take back power and freedom in a cozy world of cottages and gardens. This novel is a wholesome romp through politics, philosophy, poetry, and the process of rediscovering joy!</itunes:summary>
-    <itunes:category text="Arts/Books" />
+    <itunes:category text="Arts" >
+	    <itunes:category text="Books" />
+    </itunes:category>
+    <itunes:type>serial</itunes:type>
     <itunes:explicit>no</itunes:explicit>
     <itunes:image href="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/cover.jpg" />
 
     <item>
-      <title>Introduction</title>
+      <title>Intro</title>
+      <itunes:episode>1</itunes:episode>
       <description>Author’s Note, Cinnamon Tea Recipe</description>
-      <pubDate>Mon, 24 Nov 2025 23:00:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_intro.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_intro.m4a"
-                 length="4361191"
-                 type="audio/mp4" />
-      <itunes:duration>00:02:51</itunes:duration>
+      <pubDate>Tue, 25 Nov 2025 23:00:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/0_intro_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/0_intro_censored.mp3" length="3034801" type="audio/mp3" />
+      <itunes:duration>00:03:09</itunes:duration>
     </item>
- 
-    <item>
+  <item>
       <title>Chapter 1</title>
+      <itunes:episode>2</itunes:episode>
       <description>Sam’s Adventure</description>
-      <pubDate>Mon, 24 Nov 2025 23:01:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_01.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_01.m4a"
-                 length="12851791"
-                 type="audio/mp4" />
-      <itunes:duration>00:08:26</itunes:duration>
+      <pubDate>Tue, 25 Nov 2025 23:01:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_01_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_01_updated.mp3" length="8111752" type="audio/mp3" />
+      <itunes:duration>00:08:53</itunes:duration>
     </item>
- 
     <item>
       <title>Chapter 2</title>
+      <itunes:episode>3</itunes:episode>
       <description>Grandma Kay</description>
-      <pubDate>Mon, 24 Nov 2025 23:02:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_02.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_02.m4a"
-                 length="15982339"
-                 type="audio/mp4" />
-      <itunes:duration>00:10:30</itunes:duration>
+      <pubDate>Tue, 25 Nov 2025 23:02:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_02_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_02_updated.mp3" length="10087432" type="audio/mp3" />
+      <itunes:duration>00:11:14</itunes:duration>
     </item>
-
- 
     <item>
       <title>Chapter 3</title>
+      <itunes:episode>4</itunes:episode>
       <description>The Dragon’s Trade</description>
-      <pubDate>Mon, 24 Nov 2025 23:03:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_03.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_03.m4a"
-                 length="10274078"
-                 type="audio/mp4" />
-      <itunes:duration>00:06:45</itunes:duration>
+      <pubDate>Tue, 25 Nov 2025 23:03:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_03_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_03_updated.mp3" length="6484744" type="audio/mp3" />
+      <itunes:duration>00:07:03</itunes:duration>
     </item>
-
- 
     <item>
       <title>Chapter 4</title>
+      <itunes:episode>5</itunes:episode>
       <description>The Home of an Elf</description>
-      <pubDate>Mon, 24 Nov 2025 23:04:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_04.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_04.m4a"
-                 length="12441365"
-                 type="audio/mp4" />
-      <itunes:duration>00:08:10</itunes:duration>
+      <pubDate>Tue, 25 Nov 2025 23:04:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_04_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_04_updated.mp3" length="7852936" type="audio/mp3" />
+      <itunes:duration>00:08:15</itunes:duration>
     </item>
-
- 
     <item>
       <title>Chapter 5</title>
+      <itunes:episode>6</itunes:episode>
       <description>Thanksgiving</description>
-      <pubDate>Mon, 24 Nov 2025 23:05:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_05.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_05.m4a"
-                 length="16523741"
-                 type="audio/mp4" />
-      <itunes:duration>00:10:51</itunes:duration>
+      <pubDate>Tue, 25 Nov 2025 23:05:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_05_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_05_updated.mp3" length="10428424" type="audio/mp3" />
+      <itunes:duration>00:10:52</itunes:duration>
     </item>
-
- 
     <item>
       <title>Chapter 6</title>
+      <itunes:episode>7</itunes:episode>
       <description>The Job of a Miner</description>
-      <pubDate>Mon, 24 Nov 2025 23:06:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_06.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_06.m4a"
-                 length="14077236"
-                 type="audio/mp4" />
+      <pubDate>Tue, 25 Nov 2025 23:06:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_06_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_06_updated.mp3" length="8883976" type="audio/mp3" />
       <itunes:duration>00:09:15</itunes:duration>
     </item>
- 
     <item>
       <title>Chapter 7</title>
+      <itunes:episode>8</itunes:episode>
       <description>Collapse</description>
-      <pubDate>Mon, 24 Nov 2025 23:07:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_07.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_07.m4a"
-                 length="14073614"
-                 type="audio/mp4" />
+      <pubDate>Tue, 25 Nov 2025 23:07:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_07_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_07_updated.mp3" length="8882440" type="audio/mp3" />
       <itunes:duration>00:09:15</itunes:duration>
     </item>
-
- 
     <item>
       <title>Chapter 8</title>
+      <itunes:episode>9</itunes:episode>
       <description>The Moon</description>
-      <pubDate>Mon, 24 Nov 2025 23:08:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_08.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_08.m4a"
-                 length="7806152"
-                 type="audio/mp4" />
-      <itunes:duration>00:05:07</itunes:duration>
+      <pubDate>Tue, 25 Nov 2025 23:08:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_08_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_08_updated.mp3" length="4926856" type="audio/mp3" />
+      <itunes:duration>00:05:08</itunes:duration>
     </item>
-
- 
     <item>
       <title>Chapter 9</title>
+      <itunes:episode>10</itunes:episode>
       <description>Redirection by Bird</description>
-      <pubDate>Mon, 24 Nov 2025 23:09:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_09.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_09.m4a"
-                 length="10642887"
-                 type="audio/mp4" />
-      <itunes:duration>00:06:59</itunes:duration>
+      <pubDate>Tue, 25 Nov 2025 23:09:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_09_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_09_updated.mp3" length="6717832" type="audio/mp3" />
+      <itunes:duration>00:07:00</itunes:duration>
     </item>
-
- 
     <item>
       <title>Chapter 10</title>
+      <itunes:episode>11</itunes:episode>
       <description>The Coven</description>
-      <pubDate>Mon, 24 Nov 2025 23:10:00 GMT</pubDate>
-      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_10.m4a</guid>
-      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_to_the_north_pole_chapter_10.m4a"
-                 length="14488877"
-                 type="audio/mp4" />
+      <pubDate>Tue, 25 Nov 2025 23:10:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_10_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_10_updated.mp3" length="9143560" type="audio/mp3" />
       <itunes:duration>00:09:31</itunes:duration>
     </item>
-
-
-  </channel>
+    <item>
+      <title>Chapter 11</title>
+      <itunes:episode>12</itunes:episode>
+      <description>To Carve a Toy</description>
+      <pubDate>Tue, 25 Nov 2025 23:11:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_11_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_11_updated.mp3" length="8085640" type="audio/mp3" />
+      <itunes:duration>00:08:25</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 12</title>
+      <itunes:episode>13</itunes:episode>
+      <description>A Delivery</description>
+      <pubDate>Tue, 25 Nov 2025 23:12:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_12_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_12_updated.mp3" length="6220168" type="audio/mp3" />
+      <itunes:duration>00:06:29</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 13</title>
+      <itunes:episode>14</itunes:episode>
+      <description>The Hoard</description>
+      <pubDate>Tue, 25 Nov 2025 23:13:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_13_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_13_updated.mp3" length="10163848" type="audio/mp3" />
+      <itunes:duration>00:10:35</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 14</title>
+      <itunes:episode>15</itunes:episode>
+      <description>The Paths We Take</description>
+      <pubDate>Tue, 25 Nov 2025 23:14:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_14_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_14_updated.mp3" length="9253000" type="audio/mp3" />
+      <itunes:duration>00:09:38</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 15</title>
+      <itunes:episode>16</itunes:episode>
+      <description>Gingerbread and Decisions</description>
+      <pubDate>Tue, 25 Nov 2025 23:15:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_15_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_15_updated.mp3" length="8338696" type="audio/mp3" />
+      <itunes:duration>00:08:41</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 16</title>
+      <itunes:episode>17</itunes:episode>
+      <description>Yards</description>
+      <pubDate>Tue, 25 Nov 2025 23:16:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_16_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_16_updated.mp3" length="7915912" type="audio/mp3" />
+      <itunes:duration>00:08:15</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 17</title>
+      <itunes:episode>18</itunes:episode>
+      <description>The Storage Capacity of Mint</description>
+      <pubDate>Tue, 25 Nov 2025 23:17:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_17_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_17_updated.mp3" length="3908488" type="audio/mp3" />
+      <itunes:duration>00:04:04</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 18</title>
+      <itunes:episode>19</itunes:episode>
+      <description>The Christmas Spell</description>
+      <pubDate>Tue, 25 Nov 2025 23:18:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_18_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_18_updated.mp3" length="5955976" type="audio/mp3" />
+      <itunes:duration>00:06:12</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 19</title>
+      <itunes:episode>20</itunes:episode>
+      <description>A Proclamation</description>
+      <pubDate>Tue, 25 Nov 2025 23:19:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_19_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_19_updated.mp3" length="3653896" type="audio/mp3" />
+      <itunes:duration>00:03:48</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 20</title>
+      <itunes:episode>21</itunes:episode>
+      <description>Christmas Eve Mass</description>
+      <pubDate>Tue, 25 Nov 2025 23:20:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_20_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_20_updated.mp3" length="6581270" type="audio/mp3" />
+      <itunes:duration>00:06:51</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 21</title>
+      <itunes:episode>22</itunes:episode>
+      <description>Christmas Morning</description>
+      <pubDate>Tue, 25 Nov 2025 23:21:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_21_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_21_updated.mp3" length="5451016" type="audio/mp3" />
+      <itunes:duration>00:05:41</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 22</title>
+      <itunes:episode>23</itunes:episode>
+      <description>Kay’s Philosophy</description>
+      <pubDate>Tue, 25 Nov 2025 23:22:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_22_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_22_updated.mp3" length="13505800" type="audio/mp3" />
+      <itunes:duration>00:14:04</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 23</title>
+      <itunes:episode>24</itunes:episode>
+      <description>The Guild</description>
+      <pubDate>Tue, 25 Nov 2025 23:23:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_23_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_23_updated.mp3" length="6029320" type="audio/mp3" />
+      <itunes:duration>00:06:17</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 24</title>
+      <itunes:episode>25</itunes:episode>
+      <description>The Dragon</description>
+      <pubDate>Tue, 25 Nov 2025 23:24:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_24_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_24_updated.mp3" length="9973000" type="audio/mp3" />
+      <itunes:duration>00:10:23</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 25</title>
+      <itunes:episode>26</itunes:episode>
+      <description>Opposition</description>
+      <pubDate>Tue, 25 Nov 2025 23:25:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_25_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_25_updated.mp3" length="7515400" type="audio/mp3" />
+      <itunes:duration>00:07:50</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 26</title>
+      <itunes:episode>27</itunes:episode>
+      <description>The Public</description>
+      <pubDate>Tue, 25 Nov 2025 23:26:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_26_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_26_updated.mp3" length="5106184" type="audio/mp3" />
+      <itunes:duration>00:05:19</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 27</title>
+      <itunes:episode>28</itunes:episode>
+      <description>Automation</description>
+      <pubDate>Tue, 25 Nov 2025 23:27:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_27_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_27_updated.mp3" length="6633352" type="audio/mp3" />
+      <itunes:duration>00:06:54</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 28</title>
+      <itunes:episode>29</itunes:episode>
+      <description>Going Home</description>
+      <pubDate>Tue, 25 Nov 2025 23:28:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_28_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_28_updated.mp3" length="3443848" type="audio/mp3" />
+      <itunes:duration>00:03:35</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 29</title>
+      <itunes:episode>30</itunes:episode>
+      <description>Care for a Nestling</description>
+      <pubDate>Tue, 25 Nov 2025 23:29:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_29_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_29_updated.mp3" length="6662536" type="audio/mp3" />
+      <itunes:duration>00:06:56</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 30</title>
+      <itunes:episode>31</itunes:episode>
+      <description>The One in White</description>
+      <pubDate>Tue, 25 Nov 2025 23:30:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_30_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_30_updated.mp3" length="8373256" type="audio/mp3" />
+      <itunes:duration>00:08:43</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 31</title>
+      <itunes:episode>32</itunes:episode>
+      <description>Ownership</description>
+      <pubDate>Tue, 25 Nov 2025 23:31:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_31_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_31_updated.mp3" length="5073928" type="audio/mp3" />
+      <itunes:duration>00:05:17</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 32</title>
+      <itunes:episode>33</itunes:episode>
+      <description>New Jobs</description>
+      <pubDate>Tue, 25 Nov 2025 23:32:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_32_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_32_updated.mp3" length="4623880" type="audio/mp3" />
+      <itunes:duration>00:04:49</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 33</title>
+      <itunes:episode>34</itunes:episode>
+      <description>A Business Proposition</description>
+      <pubDate>Tue, 25 Nov 2025 23:33:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_33_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_33_updated.mp3" length="10947592" type="audio/mp3" />
+      <itunes:duration>00:11:24</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 34</title>
+      <itunes:episode>35</itunes:episode>
+      <description>The Flying Flotilla</description>
+      <pubDate>Tue, 25 Nov 2025 23:34:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_34_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_34_updated.mp3" length="2898184" type="audio/mp3" />
+      <itunes:duration>00:03:01</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 35</title>
+      <itunes:episode>36</itunes:episode>
+      <description>Casting the Spell</description>
+      <pubDate>Tue, 25 Nov 2025 23:35:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_35_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_35_updated.mp3" length="7766920" type="audio/mp3" />
+      <itunes:duration>00:08:05</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 36</title>
+      <itunes:episode>37</itunes:episode>
+      <description>To Be a Witch</description>
+      <pubDate>Tue, 25 Nov 2025 23:36:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_36_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_36_updated.mp3" length="8154376" type="audio/mp3" />
+      <itunes:duration>00:08:30</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 37</title>
+      <itunes:episode>38</itunes:episode>
+      <description>A Change in Kay</description>
+      <pubDate>Tue, 25 Nov 2025 23:37:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_37_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_37_updated.mp3" length="7106440" type="audio/mp3" />
+      <itunes:duration>00:07:24</itunes:duration>
+    </item>
+    <item>
+      <title>Chapter 38</title>
+      <itunes:episode>39</itunes:episode>
+      <description>The END</description>
+      <pubDate>Tue, 25 Nov 2025 23:38:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_38_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/how_light_returned_chapter_38_updated.mp3" length="8026888" type="audio/mp3" />
+      <itunes:duration>00:08:22</itunes:duration>
+    </item>
+    <item>
+      <title>Closing Remarks</title>
+      <itunes:episode>40</itunes:episode>
+      <description>How Colorado Inspired the Book, Discussion Questions, Witchcraft Disclaimer</description>
+      <pubDate>Tue, 25 Nov 2025 23:39:00 +0000</pubDate>
+      <guid>https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/z_closing_remarks_updated.mp3</guid>
+      <enclosure url="https://nicozucca.com/audiobooks/how_light_returned_to_the_north_pole/z_closing_remarks_updated.mp3" length="7702538" type="audio/mp3" />
+      <itunes:duration>00:08:01</itunes:duration>
+    </item>
+    </channel>
 </rss>

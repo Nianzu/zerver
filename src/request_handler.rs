@@ -43,6 +43,8 @@ pub fn http_request_from_string(s: &str) -> HttpRequest {
 
     let content_type_local: &str = match &file_ext_local[..] {
         "html" => "text/html",
+        "xml" => "text/xml",
+        "mp3" => "audio/mpeg",
         "png" => "image/png",
         "jpg" => "image/jpeg",
         "gif" => "image/gif",
