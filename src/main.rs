@@ -26,6 +26,7 @@ use serde::{Deserialize, Serialize};
 use std::io::Write;
 use tokio::sync::Mutex;
 use walkdir::WalkDir;
+use std::process::Command;
 
 #[derive(Serialize)]
 struct insurance_return {
@@ -355,6 +356,34 @@ async fn handle_delete_request(request: &request_handler::HttpRequest) -> (Strin
     }
 }
 
+async fn handle_search_request(request: &request_handler::HttpRequest) -> (String, Vec<u8>) {
+    if request.request_type == "POST" {
+        let body = request.body.clone();
+        let params: serde_json::Value = serde_json::from_slice(body.as_bytes()).unwrap();
+        let regex_string = params.get("regex_string").and_then(|v| v.as_str()).unwrap_or("");
+
+        // Base directory for secured files
+        let base_dir = "/home/zico/zerver/website/secured/obsidian";
+
+        let output = Command::new("rg").arg("--json").arg("-i").arg(regex_string).current_dir(base_dir).output().expect("Search failed");
+        
+
+        println!("REGEX_STRING: {}", regex_string);
+        println!("RG OUTPUT: {}", std::str::from_utf8(&output.stdout).unwrap());
+
+        let content: String =String::from_utf8_lossy(&output.stdout).to_string();
+        (
+            "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            content.into_bytes(),
+        )
+    } else {
+        (
+            "HTTP/1.1 405 Method Not Allowed\r\nContent-Type: text/plain\r\n\r\n".to_string(),
+            b"Only POST method is allowed".to_vec(),
+        )
+    }
+}
+
 async fn handle_insurance_request(request: &request_handler::HttpRequest) -> (String, Vec<u8>) {
     if request.request_type == "POST" {
         let body = request.body.clone();
@@ -629,6 +658,13 @@ async fn handle_connection(
         } else if http_request.filename == "/home/zico/zerver/website/delete" {
             println!("delete");
             let response = handle_delete_request(&http_request).await;
+            stream.write_all(response.0.as_bytes()).await.unwrap();
+            stream.write_all(&response.1).await.unwrap();
+            return;
+        } else if http_request.filename == "/home/zico/zerver/website/search" {
+        
+            println!("search");
+            let response = handle_search_request(&http_request).await;
             stream.write_all(response.0.as_bytes()).await.unwrap();
             stream.write_all(&response.1).await.unwrap();
             return;
