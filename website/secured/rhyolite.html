@@ -171,11 +171,16 @@
         font-family: monospace;
       }
       .search_result_file {
+        font-size: 1.0em;
+        font-weight: bold;
         padding-top: 2ch;
       }
       .parent {
         display: flex;
         gap: 2ch;
+      }
+      .parent:hover {
+        background-color: #2d0606;
       }
     </style>
   </head>
@@ -293,6 +298,10 @@
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
               body: `path=${encodeURIComponent(path)}`,
             });
+            const search_results = document.querySelector(
+              'div[name="search-results"]',
+            );
+            search_results.innerHTML = "";
 
             if (response.ok) {
               const content = await response.text();
@@ -302,18 +311,22 @@
               textarea.innerHTML = "";
 
               const lines = content.split("\n");
+              line_number = 0;
               lines.forEach((line) => {
                 if (!line) {
                   const br = document.createElement("br");
                   const div = document.createElement("div");
                   div.appendChild(br);
                   div.setAttribute("class", "line");
+                  div.setAttribute("id", "line_"+line_number);
                   textarea.appendChild(div);
                 } else {
                   const div = document.createElement("div");
+                  div.setAttribute("id", "line_"+line_number);
                   div.textContent = line;
                   textarea.appendChild(div);
                 }
+                line_number += 1;
               });
               textarea.removeChild(textarea.lastChild);
 
@@ -345,6 +358,7 @@
               search_results.innerHTML = "";
               const content = await response.text();
               const results = content.split("\n");
+              current_file = "";
               results.forEach((result) => {
                 const json = JSON.parse(result);
                 const div_clickable = document.createElement("div");
@@ -358,8 +372,17 @@
                   div_clickable.appendChild(div_line_number);
                   div_clickable.appendChild(div);
                   div_clickable.setAttribute("class", "parent");
+                  const local_file = current_file;
+                  div_clickable.onclick = async () => {
+                    await loadFile(
+                      "/home/zico/zerver/website/secured/obsidian/" +
+                        local_file,
+                    );
+                    document.getElementById("line_"+json.data.line_number).scrollIntoView({block: "center"});
+                  };
                 } else if (json.type == "begin") {
-                  div_clickable.textContent = json.data.path.text;
+                  current_file = json.data.path.text;
+                  div_clickable.textContent = current_file;
                   div_clickable.setAttribute("class", "search_result_file");
                 }
 
