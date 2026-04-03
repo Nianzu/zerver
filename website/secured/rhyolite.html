@@ -166,14 +166,16 @@
       }
 
       .line_number {
-        float: left;
-        width: 5ch;
+        flex: 0 0 5ch;
         text-align: right;
-        padding-right: 2ch;
         font-family: monospace;
       }
       .search_result_file {
         padding-top: 2ch;
+      }
+      .parent {
+        display: flex;
+        gap: 2ch;
       }
     </style>
   </head>
@@ -355,6 +357,7 @@
                   div_line_number.setAttribute("class", "line_number");
                   div_clickable.appendChild(div_line_number);
                   div_clickable.appendChild(div);
+                  div_clickable.setAttribute("class", "parent");
                 } else if (json.type == "begin") {
                   div_clickable.textContent = json.data.path.text;
                   div_clickable.setAttribute("class", "search_result_file");
