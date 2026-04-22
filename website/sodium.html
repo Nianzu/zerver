@@ -1,87 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Website</title>
-    <link rel="stylesheet" href="homestyles.css">
-    <link rel="icon" type="image/png" href="images/nico_simplified_transparent.png">
+  <meta name="generator" content=
+  "HTML Tidy for HTML5 for Linux version 5.6.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content=
+  "width=device-width, initial-scale=1.0">
+  <title>Your Website</title>
+  <link rel="stylesheet" href="homestyles.css">
+  <link rel="icon" type="image/png" href=
+  "images/nico_simplified_transparent.png">
 </head>
-
 <body>
-    <div class="with-sidebar">
-        <!-- #include sidebar.html -->
-        <div>
-            <div class="content">
-                <header>
-                    <h1>Personal Project - Sodium Mini-Robots</h1>
-                    <p>A mini-robotics research project, intended to be a smaller Navie, hence Na (Sodium).</p>
-                </header>
-
-
-                <!-- #include image_large.html images/na1_3.gif -->
-
-                <section>
-                    <h2>About the project</h2>
-                    <!-- #include image.html images/na1_1.png -->
-                    <p>Sodium 1 (Na 1) was developed first, as an experiment to see how small a robot I could make, and
-                        what tradeoffs that size would come with. The robot is able to drive around using a touch
-                        joystick on a webpage, and recharges using USB-C. Na 1 suffered from a bad mechanical design,
-                        that was entirely held together with rubber bands. Its tracks were stolen from a video by
-                        Maker's Muse, and worked very well! It also suffered from not having a WiFi antenna, which
-                        limited its effective range to just a few feet. Other intermittent electrical problems plagued
-                        the device, which lead to the creation of Na 2.</p>
-                    <!-- #include image.html images/na2_1.jpg -->
-                    <p>Na 2 was a significant leap forward in mechanical design. Its modular structure allows you to
-                        access the motors with just 2 screws, or replace the battery with a tug on the magnetic
-                        connector. It also charges over USB-C, but ditches the 5v drive system in favor of the 3v system
-                        the xiao esp32c3 supports natively. It also ditches the bearings for a much more simple drive
-                        system.</p>
-                    <p>Na 2 was too far a correction from the mistakes of Na 1. Its mechanical build and design was a
-                        huge success, but its drive system suffered to the point of unusably. The learnings from this
-                        robot heavily influenced the design of Navie 2, which you can read about on the <a
-                            href="https://nicozucca.com/navie_2.html">Navie 2 page</a>!
-                    </p>
-
-                </section>
-
-                <section>
-                    <h2>Technologies</h2>
-                    <div class="skills-cards">
-                        <div class="card">ESP32</div>
-                        <div class="card">Arduino-C</div>
-                        <div class="card">Embedded WiFi</div>
-                        <div class="card">Mini-Robotics</div>
-                        <div class="card">Webserver</div>
-                    </div>
-                </section>
-
-                <section>
-                    <h2>Relevant Links</h2>
-                    <p><a href="https://github.com/Nianzu/Na2" target="_blank">Github</a></p>
-                </section>
-
-                <section>
-                    <h2>Gallery</h2>
-                    <!-- #include image.html images/na2_1.jpg -->
-                    <!-- #include image.html images/na2_2.jpg -->
-                    <!-- #include image.html images/na2_3.jpg -->
-                    <!-- #include image.html images/na2_4.jpg -->
-                    <!-- #include image.html images/na2_5.jpg -->
-                    <!-- #include image.html images/na2_6.gif -->
-
-                    <!-- #include image.html images/na1_1.png -->
-                    <!-- #include image.html images/na1_2.png -->
-                    <!-- #include image.html images/na1_3.gif -->
-                </section>
-
-                <footer>
-                    <p>&copy; 2025 Nico Zucca. No rights reserved.</p>
-                </footer>
+  <div class="with-sidebar">
+    <!-- #include sidebar.html -->
+    <div>
+      <div class="content">
+        <header>
+          <div class="eyebrow">
+            Projects · Robotics · 2024
+          </div>
+          <h1>Sodium Mini-Robots <span style=
+          "color:var(--accent)">(Na)</span></h1>
+          <p class="subtitle">A mini-robotics research project,
+          intended to be a smaller Navie, hence Na (Sodium).</p>
+          <div class="meta">
+            by Nico Zucca · revised 2024-11
+          </div>
+        </header><!-- #include image.html images/na1_3.gif A NA1_Driving -->
+        <section>
+          <h2>About the project</h2>
+          <p>Sodium 1 (Na 1) was developed first, as an experiment
+          to see how small a robot I could make, and what tradeoffs
+          that size would come with. The robot is able to drive
+          around using a touch joystick on a webpage, and recharges
+          using USB-C. Na 1 suffered from a bad mechanical design,
+          that was entirely held together with rubber bands. Its
+          tracks were stolen from a video by Maker's Muse, and
+          worked very well! It also suffered from not having a WiFi
+          antenna, which limited its effective range to just a few
+          feet. Other intermittent electrical problems plagued the
+          device, which lead to the creation of Na 2.</p>
+          <!-- #include image.html images/na1_1.png B NA1_Assembled -->
+          <p>Na 2 was a significant leap forward in mechanical
+          design. Its modular structure allows you to access the
+          motors with just 2 screws, or replace the battery with a
+          tug on the magnetic connector. It also charges over
+          USB-C, but ditches the 5v drive system in favor of the 3v
+          system the xiao esp32c3 supports natively. It also
+          ditches the bearings for a much more simple drive
+          system.</p>
+          <!-- #include image.html images/na2_1.jpg C NA2_with_battery -->
+          <p>Na 2 was too far a correction from the mistakes of Na
+          1. Its mechanical build and design was a huge success,
+          but its drive system suffered to the point of unusably.
+          The learnings from this robot heavily influenced the
+          design of Navie 2, which you can read about on the
+          <a href="https://nicozucca.com/navie_2.html">Navie 2
+          page</a>!</p>
+        </section>
+        <section>
+          <div class="appendix">
+            <div class="appendix-head">
+              Appendix · Details & links
             </div>
-        </div>
+            <div class="appendix-grid">
+              <div class="appendix-col">
+                <table class="spec-tbl">
+                  <tbody>
+                    <tr>
+                      <td>MCU</td>
+                      <td>Xiao ESP32-C3</td>
+                    </tr>
+                    <tr>
+                      <td>Languages</td>
+                      <td>Arduino-C</td>
+                    </tr>
+                    <tr>
+                      <td>CAD Program</td>
+                      <td>Onshape</td>
+                    </tr>
+                    <tr>
+                      <td>Technologies</td>
+                      <td>Embedded · WiFi · Webserver · Robotics</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="appendix-col">
+                <div class="links">
+                  <a target="_blank" href=
+                  "https://github.com/Nianzu/Na2">GitHub ·
+                  Nianzu/Na2 →</a>  <a class="next_page" href="/navie_2.html">Next up: Navie 2 →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <section>
+          <h2>Gallery</h2>
+          <!-- #include image.html images/na2_2.jpg D NA2_with_battery_rear -->
+          <!-- #include image.html images/na2_3.jpg E NA2_held_for_scale -->
+          <!-- #include image.html images/na2_4.jpg F NA2_rear -->
+          <!-- #include image.html images/na2_5.jpg G NA2_front -->
+          <!-- #include image.html images/na2_6.gif H NA2_battery_insertion -->
+          <!-- #include image.html images/na1_2.png I NA1_top -->
+        </section>
+      </div>
     </div>
+  </div>
 </body>
-
 </html>

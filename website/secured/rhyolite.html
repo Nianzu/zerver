@@ -604,6 +604,14 @@
               applyFormatting(e.target);
             });
 
+          document.addEventListener("keydown", function (e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'F')
+          {
+            e.preventDefault();
+            document.getElementById('search_querry').focus();
+          }
+
+          })
           document
             .querySelector('input[name="q"]')
             .addEventListener("keydown", function (e) {
